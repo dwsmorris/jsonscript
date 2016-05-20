@@ -36,6 +36,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 						characterArray: "1 '2' 3".split("")
 					}))).to.deep.equal(["1", "'2'", "3"]);
 				});
+
+				it("maps 1 '2' 3 to [1, '2', 3]", function () {
+					expect(extract(patternscript.tokenize({
+						characterArray: "1 '2' 3".split("")
+					}))).to.deep.equal(["1", "'2'", "3"]);
+				});
+
+				it("maps 1 \"2\" 3 to [1, \"2\", 3]", function () {
+					expect(extract(patternscript.tokenize({
+						characterArray: "1 \"2\" 3".split("")
+					}))).to.deep.equal(["1", "\"2\"", "3"]);
+				});
+
+				it("maps 1 'a\"b\"c' 3 to [1, 'a\"b\"c', 3]", function () {
+					expect(extract(patternscript.tokenize({
+						characterArray: "1 'a\"b\"c' 3".split("")
+					}))).to.deep.equal(["1", "'a\"b\"c'", "3"]);
+				});
+
+				it("maps 1 \"a'b'c\" 3 to [1, \"a'b'c\", 3]", function () {
+					expect(extract(patternscript.tokenize({
+						characterArray: "1 \"a'b'c\" 3".split("")
+					}))).to.deep.equal(["1", "\"a'b'c\"", "3"]);
+				});
+
+				it("maps 1 'a (b) c' 3 to [1, 'a (b) c', 3]", function () {
+					expect(extract(patternscript.tokenize({
+						characterArray: "1 'a (b) c' 3".split("")
+					}))).to.deep.equal(["1", "'a (b) c'", "3"]);
+				});
+
+				it("maps 1 \"a (b) c\" 3 to [1, \"a (b) c\", 3]", function () {
+					expect(extract(patternscript.tokenize({
+						characterArray: "1 \"a (b) c\" 3".split("")
+					}))).to.deep.equal(["1", "\"a (b) c\"", "3"]);
+				});
 			});
 		});
 	</script>
