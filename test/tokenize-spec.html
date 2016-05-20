@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+	<script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 	<script src="../bower_components/web-component-tester/browser.js"></script>
 
 	<!-- Step 1: import the element to test -->
@@ -20,19 +21,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body>
 	<script>
-		var extract = R.map(function (token) {
-			if (R.isArrayLike(token.expression)) {
-				return extract(token.expression);
-			} else {
-				return token.expression;
-			}
-		});
+		window.addEventListener('WebComponentsReady', function () {
+			var extract = R.map(function (token) {
+				if (R.isArrayLike(token.expression)) {
+					return extract(token.expression);
+				} else {
+					return token.expression;
+				}
+			});
 
-		suite("tokenize", function () {
-			test("1 2 => [1, 2]", function () {
-				expect(extract(patternscript.tokenize({
-					characterArray: "1 '2' 3".split("")
-				}))).to.deep.equal(["1", "'2'", "3"]);
+			describe("tokenize", function () {
+				it("maps 1 2 to [1, 2]", function () {
+					expect(extract(patternscript.tokenize({
+						characterArray: "1 '2' 3".split("")
+					}))).to.deep.equal(["1", "'2'", "3"]);
+				});
 			});
 		});
 	</script>

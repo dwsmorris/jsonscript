@@ -12,7 +12,8 @@
     "/test/"
   ],
   "dependencies": {
-    "ramda-import": "dwsmorris/ramda-import"
+    "ramda-import": "dwsmorris/ramda-import",
+    "webcomponentsjs": "polymer/webcomponentsjs#^0.7.22"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
