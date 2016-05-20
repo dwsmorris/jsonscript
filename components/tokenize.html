@@ -1,0 +1,83 @@
+﻿<script>
+	;(function () {
+		this.patternscript = this.patternscript || {};
+
+		this.patternscript.tokenize = function (state) {
+			var tokens = [];
+			var token = "";
+			var preWhitespace = "";
+			var quoteCharacter;
+
+			var pushCurrentToken = function () {
+				if (token !== "") {
+					tokens.push({
+						expression: token,
+						preWhitespace: preWhitespace
+					});
+
+					token = "";
+					preWhitespace = "";
+				}
+			};
+
+			while (state.characterArray.length) {
+				var character = state.characterArray.shift();
+
+				if (!quoteCharacter) {
+					if ("'\"".indexOf(character) !== -1) {
+						pushCurrentToken();
+
+						quoteCharacter = character;
+						token += character;
+					} else if ("(".indexOf(character) !== -1) {
+						pushCurrentToken();
+
+						tokens.push({
+							expression: tokenize(state),
+							preWhitespace: preWhitespace
+						});
+
+						token = "";
+						preWhitespace = "";
+					} else if (" \t\n\r\f".indexOf(character) !== -1) {
+						pushCurrentToken();
+
+						preWhitespace += character;
+					} else if (")".indexOf(character) !== -1) {
+						if (token !== "") {
+							return tokens.concat([{
+								expression: token,
+								preWhitespace: preWhitespace
+							}]);
+						} else { // need to save whitespace before a closing brace
+							if (tokens.length > 0) {
+								tokens[tokens.length-1].postWhitespace = preWhitespace;
+							}
+
+							return tokens;
+						}
+					} else {
+						token += character;
+					}
+				} else {
+					token += character;
+
+					if (character === quoteCharacter) {
+						pushCurrentToken();
+
+						quoteCharacter = undefined;
+					}
+				}
+			}
+
+			if (token !== "") {
+				tokens.push({
+					expression: token,
+					preWhitespace: preWhitespace
+				});
+			}
+
+			return tokens;
+		};
+	}.call(this));
+</script>

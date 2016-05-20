@@ -1,0 +1,17 @@
+{
+  "name": "patternscript",
+  "version": "0.0.1",
+  "keywords": [
+    "web-component",
+    "patternscript"
+  ],
+  "main": "patternscript.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "ramda-import": "dwsmorris/ramda-import"
+  }
+}
