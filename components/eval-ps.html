@@ -4,10 +4,7 @@
 <script>
 	window.addEventListener('WebComponentsReady', function () {
 		PatternScript.evalPs = function (cs) {
-			var component = {};
-			eval(PatternScript.ps2js(cs));
-
-			return component.exports;
+			return new Function(PatternScript.ps2js(cs))();
 		};
 	});
 </script>

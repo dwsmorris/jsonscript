@@ -10,7 +10,7 @@
 		PatternScript.ast2js = function (ast, parameters) {
 			if (_.isArray(ast)) {
 				return "[" + R.reduce(function (acc, term) {
-					return R.concat(acc, ast2js(term, parameters));
+					return R.concat(acc, PatternScript.ast2js(term, parameters));
 				}, [], ast).join(", ") + "]";
 			} else {
 				var noFurtherCurrying = PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1); // function parameters will already be curried

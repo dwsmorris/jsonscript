@@ -153,7 +153,7 @@
 				}, [], terms));
 			}, [], equations)));
 
-			var htmlSymbols = R.reduce(function (acc, bundleSymbols) {
+			var htmlSymbols = [];/*R.reduce(function (acc, bundleSymbols) {
 				return acc.concat(R.reduce(function (acc, symbol) {
 					if (symbol.indexOf("rvc!") === 0) {
 						return acc.concat([symbol.slice(4)]);
@@ -163,7 +163,7 @@
 				}, [], bundleSymbols));
 			}, [], requirejs.s.contexts._.config.bundles).concat(R.map(R.head, R.filter(function (pair) {
 				return pair[1].indexOf("html") !== -1;
-			}, _.pairs(requirejs.s.contexts._.config.paths))));
+			}, _.pairs(requirejs.s.contexts._.config.paths))));*/
 
 			var requireBlock = R.map(function (symbol) {
 				var isHtml = R.contains(symbol, htmlSymbols);
@@ -175,10 +175,10 @@
 					(isHtml ? "()" : "");
 			}, dependencies).join(", ");
 
-			var script = "(function(R, matches, _, cs_reduce" +
+			var script = /*"(function(R, matches, _, cs_reduce" +
 				(requireBlock ? ", " : "") +
 				dependencies.join(", ") +
-				") {\n" +
+				") {\n"*/ "" +
 				R.map(function (equation) {
 					var parameters = equation.parameters;
 					var hasNamedParameters = parameters.length > 0;
@@ -259,13 +259,13 @@
 
 					return output;
 				}, equations).join(" ") +
-				"component.exports = {" +
+				"return {" +
 				R.map(function (definition) {
 					return definition + ": " + definition;
 				}, definitions).join(", ") +
-				"};})(require('ramda'), require('matches'), require('_'), require('cs_reduce')" +
+				"};"/*})(require('ramda'), require('matches'), require('_'), require('cs_reduce')" +
 				(requireBlock ? ", " : "") +
-				requireBlock + ");";
+				requireBlock + ");"*/;
 
 			console.log(script);
 			return script;
