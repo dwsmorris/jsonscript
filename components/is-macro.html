@@ -1,0 +1,15 @@
+﻿<script>
+	;(function () {
+		this.patternscript = this.patternscript || {};
+
+		this.patternscript.isLiteral = function (word) {
+			switch (word) {
+				case "if":
+					return true;
+
+				default:
+					return false;
+			};
+		};
+	}.call(this));
+</script>

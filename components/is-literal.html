@@ -1,0 +1,23 @@
+﻿<script>
+	;(function () {
+		this.patternscript = this.patternscript || {};
+
+		this.patternscript.isLiteral = function (word) {
+			var isString = function (string) {
+				var firstCharacter = string[0];
+
+				return ("\"'".indexOf(firstCharacter) !== -1) && (string[string.length - 1] === firstCharacter);
+			};
+
+			var isBoolean = function (string) {
+				return string === "true" || string === "false";
+			};
+
+			var isUndefinedOrNull = function (value) {
+				return value === 'null' || value === 'undefined';
+			};
+
+			return !isNaN(word) || isString(word) || isBoolean(word) || isUndefinedOrNull(word);
+		};
+	}.call(this));
+</script>

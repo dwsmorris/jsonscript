@@ -1,0 +1,34 @@
+﻿<link rel="import" href="is-literal.html">
+
+<script>
+	;(function () {
+		window.addEventListener('WebComponentsReady', function () {
+			this.patternscript = this.patternscript || {};
+
+			this.patternscript.word2js = function (word) {
+				if (this.patternscript.isLiteral(word)) {
+					return word;
+				} else {
+					switch (word) {
+						case "if":
+							return "cs_" + word;
+
+						case "+": return "cs_plus";
+						case "-": return "cs_minus";
+						case "*": return "cs_multiply";
+						case "/": return "cs_divide";
+						case "===": return "cs_equals";
+						case "<": return "cs_lessThan";
+						case ">": return "cs_greaterThan";
+						case "!=": return "cs_notEquals";
+						case "<=": return "cs_lessThanOrEqualTo";
+						case ">=": return "cs_greaterThanOrEqualTo";
+						case "[]": return "cs_array";
+
+						default: return word;
+					}
+				}
+			};
+		});
+	}.call(this));
+</script>

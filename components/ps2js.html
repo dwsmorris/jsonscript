@@ -1,0 +1,274 @@
+﻿<link rel="import" href="../../ramda-import/ramda-import.html">
+<link rel="import" href="tokenize.html">
+<link rel="import" href="ast2js.html">
+<link rel="import" href="is-literal.html">
+<link rel="import" href="word2js.html">
+
+<script>
+	;(function () {
+		window.addEventListener('WebComponentsReady', function () {
+			this.patternscript = this.patternscript || {};
+
+			this.patternscript.ps2js = function (cs) {
+				// split into lines
+				var lines = cs.match(/[^\r\n]+/g);
+
+				var encaseRootInBraces = function (astString) {
+					// remove spaces from strings to check if we need to encase in brackets
+					var astWithoutStrings = astString.replace(/"[^"]*"/g, '').replace(/'[^']*'/g, '');
+
+					var isUnencapsulatedAst = _.reduce(function (acc, character, index) {
+						if (character === "(") {
+							return _.merge({
+								astLevel: acc.astLevel + 1
+							}, acc);
+						} else if (character === ")") {
+							return _.merge({
+								astLevel: acc.astLevel - 1,
+								isUnencapsulatedAst: ((acc.astLevel === 1) && (index !== astWithoutStrings.length - 1)) ? true : undefined
+							}, acc);
+						} else {
+							return acc;
+						}
+					}, {
+						astLevel: 0
+					}, astWithoutStrings.split("")).isUnencapsulatedAst;
+
+					// if multiple components (ie. contains spaces) and not bounded by braces or quotes, add braces
+					if (isUnencapsulatedAst ||
+						((astWithoutStrings.indexOf(" ") !== -1) && ((astWithoutStrings[0] !== "(") || (astWithoutStrings.slice(-1) !== ")")))) {
+						return "(" + astString + ")";
+					} else {
+						return astString;
+					}
+				};
+
+				var extractComponents = function (term) {
+					if (_.isArray(term.expression)) {
+						return _.map(extractComponents, term.expression);
+					} else {
+						return term.expression;
+					}
+				};
+
+				var getSignatureComponents = function (signature) {
+					var parts = extractComponents(this.patternscript.tokenize({
+						characterArray: signature.split("")
+					})[0]); //_.compact(signature.split(/[ \(\)]/));
+					var isThunk = _.isString(parts);
+
+					return {
+						name: isThunk ? parts : parts[0],
+						parameters: isThunk ? [] : parts.slice(1)
+					};
+				};
+
+				// split each line into name and expression
+				var equations = _.reduce(function (acc, line) {
+					var sides = line.split(/\s=\s/g);
+
+					if (sides.length === 1) {
+						return undefined;
+					}
+
+					var signatureComponents = getSignatureComponents(encaseRootInBraces(sides[0].trim()));
+					var lisp = encaseRootInBraces(sides[1].trim());
+					var name = signatureComponents.name;
+					var parameters = signatureComponents.parameters;
+					var localDefinitions = (acc.length === 0) ? [name] : _.uniq(R.concat(_.last(acc).localDefinitions, [name]));
+					var passedParameters = _.reject(function (parameter) {
+						// not a literal, externally namespaced function, internal patternscript function, local definition, or wildcard
+						return this.patternscript.isLiteral(parameter) || (parameter.indexOf(".") !== -1) || (this.patternscript.word2js(parameter) !== parameter) || R.contains(parameter, localDefinitions) || (parameter === "_"); // TODO: include wildcards for now in case of guard expression
+					}, _.flattenDeep(parameters));
+
+					return R.concat(acc, [{
+						name: name,
+						parameters: parameters,
+						expression: extractComponents(this.patternscript.tokenize({
+							characterArray: lisp.split("")
+						})[0]),
+						preWhitespace: sides[0].split(/[\w\(]/g)[0],
+						localDefinitions: localDefinitions,
+						passedParameters: passedParameters
+					}]);
+				}, [], lines);
+
+				var patternMatchers = _.reduce(function (acc, equation) {
+					var noOfHits = _.filter(function (value) { return value === equation.name; }, equation.localDefinitions).length;
+					var isMultipleDefinitions = noOfHits > 1;
+					var hasPatternMatchedParameters = _.some(function (parameter) {
+						return this.patternscript.isLiteral(parameter) || (parameter === "_") || _.isArray(parameter);
+					}, equation.parameters);
+					var patternMatched = isMultipleDefinitions || hasPatternMatchedParameters;
+
+					return patternMatched ? _.uniq(R.concat(acc, [equation.name])) : acc;
+				}, [], equations);
+
+				var definitions = _.uniq(_.map(function (equation) {
+					return equation.name;
+				}, equations));
+
+				var patternMatchIndices = R.zipObj(patternMatchers, R.repeat(0, patternMatchers.length));
+
+				// run through equations, and tag pattern matches with - pattern: <0-based index of pattern>
+				var processedEquations = _.reduce(function (acc, equation) {
+					if (!_.includes(equation.name, patternMatchers)) {
+						return {
+							equations: R.concat(acc.equations, [equation]),
+							patternMatchIndices: acc.patternMatchIndices
+						};
+					} else { // pattern matcher
+						var currentPatternMatchIndex = acc.patternMatchIndices[equation.name];
+
+						return {
+							equations: R.concat(acc.equations, [_.merge(equation, {
+								patternMatchIndex: currentPatternMatchIndex
+							}, {})]),
+							patternMatchIndices: _.merge(R.zipObj([equation.name], [currentPatternMatchIndex + 1]), acc.patternMatchIndices, {})
+						};
+					}
+				}, {
+					equations: [],
+					patternMatchIndices: patternMatchIndices
+				}, equations);
+
+				equations = processedEquations.equations;
+				patternMatchIndices = processedEquations.patternMatchIndices;
+
+				var dependencies = _.reject(function(dependency) {
+					return R.contains(dependency, ["Math", "console", "Array", "Function", "R", "matches", "_", "cs_reduce"]);
+				}, _.uniq(_.reduce(function (acc, equation) {
+					var definitionsAndParameters = R.concat(equation.localDefinitions, equation.passedParameters);
+					var terms = _.flattenDeep(R.concat(equation.parameters, equation.expression));
+
+					return R.concat(acc, _.reduce(function (acc, term) {
+						if (this.patternscript.isLiteral(term) || R.contains(term, definitionsAndParameters) || (term === "_")) {
+							return acc;
+						} else if (this.patternscript.word2js(term) !== term) { // internally defined js function
+							return R.concat(acc, [this.patternscript.word2js(term)]);
+						} else if (term.indexOf(".") !== -1) {
+							return R.concat(acc, [term.split(".")[0]]);
+						} else {
+							return R.concat(acc, [term]);
+						}
+					}, [], terms));
+				}, [], equations)));
+
+				var htmlSymbols = _.reduce(function (acc, bundleSymbols) {
+					return acc.concat(_.reduce(function (acc, symbol) {
+						if (symbol.indexOf("rvc!") === 0) {
+							return acc.concat([symbol.slice(4)]);
+						} else {
+							return acc;
+						}
+					}, [], bundleSymbols));
+				}, [], requirejs.s.contexts._.config.bundles).concat(_.map(_.first, _.filter(function (pair) {
+					return pair[1].indexOf("html") !== -1;
+				}, _.pairs(requirejs.s.contexts._.config.paths))));
+
+				var requireBlock = _.map(function (symbol) {
+					var isHtml = _.includes(symbol, htmlSymbols);
+
+					return "require('" +
+						(isHtml ? "rvc!" : "") +
+						symbol +
+						"')" +
+						(isHtml ? "()" : "");
+				}, dependencies).join(", ");
+
+				var script = "(function(R, matches, _, cs_reduce" +
+					(requireBlock ? ", " : "") +
+					dependencies.join(", ") +
+					") {\n" +
+					_.map(function (equation) {
+						var parameters = equation.parameters;
+						var hasNamedParameters = parameters.length > 0;
+						var name = equation.name;
+						var expression = equation.expression;
+						var isPatternMatched = equation.patternMatchIndex !== undefined;
+						var isCurried = parameters.length > 1;
+						var passedParameters = equation.passedParameters;
+						var localDefinitions = equation.localDefinitions;
+						var defined = R.concat(R.concat(passedParameters, localDefinitions), htmlSymbols);
+						var jsExpression = this.patternscript.ast2js(expression, defined);
+						var isAst = passedParameters.length > 0;
+
+						if (isAst || isPatternMatched) {
+							jsExpression = "function(" + passedParameters.join(", ") + ") {return " + jsExpression + ";}";
+						}
+
+						if (isCurried && !isPatternMatched) {
+							jsExpression = "R.curry(" + jsExpression + ")";
+						}
+
+						if (isAst) {
+							jsExpression = "(function() {var temp = " + jsExpression + "; temp.ast = true; return temp;})()";
+						}
+
+						var output = equation.patternMatchIndex ? "" : "var "; // not 0 or undefined
+						output += name + " = ";
+						if (isPatternMatched) {
+							// guarded if parameters contains function (internal patternscript, externally namespaced function, or local definition)
+							var isFunction = function (term) {
+								return (term.indexOf(".") !== -1) || (this.patternscript.word2js(term) !== term) || R.contains(term, localDefinitions);
+							};
+					
+							var isGuarded = _.some(isFunction, _.flattenDeep(equation.parameters));
+
+							if (isGuarded) {
+								var processParameters = function (parameter, argumentIndex) {
+									if (_.isArray(parameter)) {
+										return _.map(_.partial(processParameters, _, argumentIndex), parameter);
+									} else {
+										var index = (parameter === "_") ? argumentIndex : _.indexOf(parameter, passedParameters);
+
+										return (index !== -1) ? ("args[" + index + "]") : parameter;
+									}
+								};
+
+								jsExpression = "function(args) {return _.every(_.identity, cs_reduce(" + this.patternscript.ast2js(parameters.map(processParameters), defined) + ")) ? args : false;}, " + jsExpression;
+							} else {
+								var getPatternString = function (pattern) {
+									if (_.isArray(pattern)) {
+										return "[" + _.map(getPatternString, pattern).join(", ") + "]";
+									} else {
+										return pattern;
+									}
+								};
+
+								var patternString = getPatternString(parameters).slice(1, -1); // remove outer braces from pattern string
+
+								jsExpression = "'" + patternString + "', " + jsExpression;
+							}
+
+							jsExpression = "(" + jsExpression + ")"; 
+
+							if (equation.patternMatchIndex === 0) {
+								jsExpression = "matches.pattern" + jsExpression;
+							} else { // "alt"
+								jsExpression = name + ".alt" + jsExpression;
+							}
+
+							// if it's the last pattern match, add currying statement if appropriate
+							if (isCurried && (equation.patternMatchIndex === (patternMatchIndices[name] - 1))) {
+								jsExpression = "R.curryN(" + parameters.length + ", " + jsExpression + ")";
+							}
+						} 
+				
+						output += jsExpression + ";\n";
+
+						return output;
+					}, equations).join(" ") +
+					"component.exports = {" +
+					_.map(function (definition) {
+						return definition + ": " + definition;
+					}, definitions).join(", ") + 
+					"};})(require('ramda'), require('matches'), require('_'), require('cs_reduce')" +
+					(requireBlock ? ", " : "") +
+					requireBlock + ");";
+
+				console.log(script);
+				return script;
+			};
+		}.call(this));
+</script>

@@ -1,0 +1,16 @@
+﻿<link rel="import" href="ps2js.html">
+
+<script>
+	;(function () {
+		window.addEventListener('WebComponentsReady', function () {
+			this.patternscript = this.patternscript || {};
+
+			this.patternscript.evalPs = function (cs) {
+				var component = {};
+				eval(cs2js(cs));
+
+				return component.exports;
+			};
+		});
+	}.call(this));
+</script>
