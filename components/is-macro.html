@@ -1,15 +1,13 @@
-﻿<script>
-	;(function () {
-		this.patternscript = this.patternscript || {};
+﻿<link rel="import" href="pattern-script.html">
 
-		this.patternscript.isLiteral = function (word) {
-			switch (word) {
-				case "if":
-					return true;
+<script>
+	PatternScript.isLiteral = function (word) {
+		switch (word) {
+			case "if":
+				return true;
 
-				default:
-					return false;
-			};
+			default:
+				return false;
 		};
-	}.call(this));
+	};
 </script>

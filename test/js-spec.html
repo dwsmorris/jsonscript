@@ -17,7 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 	<!-- Step 1: import the element to test -->
 	<link rel="import" href="../bower_components/ramda-import/ramda-import.html">
-	<link rel="import" href="../components/eval-cs.html">
+	<link rel="import" href="../components/eval-ps.html">
 </head>
 <body>
 	<script>
@@ -25,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			var checkResult = function (script, expectedResult, message) {
 				it(script.replace(/\n/g, " | ") + " => result = " + JSON.stringify(expectedResult) + " // " + message, function () {
 					//var rewritten = rewrite(evalCs(script).result);
-					var result = reduce(/*rewrite(*/patternscript.evalCs(script).result/*)*/);
+					var result = PatternScript.reduce(/*rewrite(*/PatternScript.evalPs(script).result/*)*/);
 
 					expect(result).to.deep.equal(expectedResult);
 				});

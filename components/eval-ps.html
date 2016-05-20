@@ -1,16 +1,13 @@
-﻿<link rel="import" href="ps2js.html">
+﻿<link rel="import" href="pattern-script.html">
+<link rel="import" href="ps2js.html">
 
 <script>
-	;(function () {
-		window.addEventListener('WebComponentsReady', function () {
-			this.patternscript = this.patternscript || {};
+	window.addEventListener('WebComponentsReady', function () {
+		PatternScript.evalPs = function (cs) {
+			var component = {};
+			eval(PatternScript.ps2js(cs));
 
-			this.patternscript.evalPs = function (cs) {
-				var component = {};
-				eval(cs2js(cs));
-
-				return component.exports;
-			};
-		});
-	}.call(this));
+			return component.exports;
+		};
+	});
 </script>

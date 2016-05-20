@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	<script src="../bower_components/web-component-tester/browser.js"></script>
 
 	<!-- Step 1: import the element to test -->
+	<link rel="import" href="../bower_components/lodash-import/lodash-import.html">
 	<link rel="import" href="../bower_components/ramda-import/ramda-import.html">
 	<link rel="import" href="../components/tokenize.html">
 </head>
@@ -23,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	<script>
 		window.addEventListener('WebComponentsReady', function () {
 			var extract = R.map(function (token) {
-				if (R.isArrayLike(token.expression)) {
+				if (_.isArray(token.expression)) {
 					return extract(token.expression);
 				} else {
 					return token.expression;

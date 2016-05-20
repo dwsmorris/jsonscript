@@ -1,32 +1,30 @@
 ﻿<link rel="import" href="../../ramda-import/ramda-import.html">
+<link rel="import" href="../../lodash-import/lodash-import.html">
+<link rel="import" href="pattern-script.html">
 <link rel="import" href="is-literal.html">
 <link rel="import" href="is-macro.html">
 <link rel="import" href="word2js.html">
 
 <script>
-	;(function () {
-		window.addEventListener('WebComponentsReady', function () {
-			this.patternscript = this.patternscript || {};
+	window.addEventListener('WebComponentsReady', function () {
+		PatternScript.ast2js = function (ast, parameters) {
+			if (_.isArray(ast)) {
+				return "[" + R.reduce(function (acc, term) {
+					return R.concat(acc, ast2js(term, parameters));
+				}, [], ast).join(", ") + "]";
+			} else {
+				var noFurtherCurrying = PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1); // function parameters will already be curried
 
-			this.patternscript.ast2js = function (ast, parameters) {
-				if (R.isArrayLike(ast)) {
-					return "[" + R.reduce(function (acc, term) {
-						return R.concat(acc, ast2js(term, parameters));
-					}, [], ast).join(", ") + "]";
+				var js = (noFurtherCurrying ? "" : "R.curry(") +
+					PatternScript.word2js(ast) +
+					(noFurtherCurrying ? "" : ")");
+
+				if (PatternScript.isMacro(ast)) {
+					return "(function() {var temp = " + js + "; temp.macro = true; return temp;})()";
 				} else {
-					var noFurtherCurrying = this.patternscript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1); // function parameters will already be curried
-
-					var js = (noFurtherCurrying ? "" : "R.curry(") +
-						this.patternscript.word2js(ast) +
-						(noFurtherCurrying ? "" : ")");
-
-					if (this.patternscript.isMacro(ast)) {
-						return "(function() {var temp = " + js + "; temp.macro = true; return temp;})()";
-					} else {
-						return js;
-					}
+					return js;
 				}
-			};
-		});
-	}.call(this));
+			}
+		};
+	});
 </script>

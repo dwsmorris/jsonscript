@@ -1,0 +1,30 @@
+﻿<link rel="import" href="../../lodash-import/lodash-import.html">
+<link rel="import" href="../../ramda-import/ramda-import.html">
+
+
+<script>
+	window.addEventListener('WebComponentsReady', function () {
+		PatternScript.reduce = function (ast) {
+			if (_.isArray(ast)) {
+				// apply rest to first
+				var fn = reduce(ast[0]);
+				var rest = R.tail(ast);
+
+				var args = (fn && fn.macro) ? rest : R.map(reduce, rest);
+
+				if (!_.isFunction(fn)) {
+					return R.concat([fn], args);
+				} else {
+					var result = R.apply(fn, args);
+					while (_.isArray(result) && result.length > 0 && (_.isFunction(result[0]) || _.isArray(result[0]))) { // repeatedly reduce
+						result = reduce(result);
+					}
+
+					return result;
+				}
+			} else {
+				return ast;
+			}
+		};
+	});
+</script>
