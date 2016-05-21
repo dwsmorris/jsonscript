@@ -9,8 +9,8 @@
 <script>
 	window.addEventListener('WebComponentsReady', function () {
 		PatternScript.ps2js = function (cs) {
-			// split into lines
-			var lines = cs.match(/[^\r\n]+/g);
+			// split into key-value pairs
+			var pairs = R.toPairs(cs);
 
 			var encaseRootInBraces = function (astString) {
 				// remove spaces from strings to check if we need to encase in brackets
@@ -63,13 +63,7 @@
 			};
 
 			// split each line into name and expression
-			var equations = R.reduce(function (acc, line) {
-				var sides = line.split(/\s=\s/g);
-
-				if (sides.length === 1) {
-					return undefined;
-				}
-
+			var equations = R.reduce(function (acc, sides) {
 				var signatureComponents = getSignatureComponents(encaseRootInBraces(sides[0].trim()));
 				var lisp = encaseRootInBraces(sides[1].trim());
 				var name = signatureComponents.name;
@@ -90,7 +84,7 @@
 					localDefinitions: localDefinitions,
 					passedParameters: passedParameters
 				}]);
-			}, [], lines);
+			}, [], pairs);
 
 			var patternMatchers = R.reduce(function (acc, equation) {
 				var noOfHits = R.filter(function (value) { return value === equation.name; }, equation.localDefinitions).length;

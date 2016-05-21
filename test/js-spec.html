@@ -24,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	<script>
 		window.addEventListener('WebComponentsReady', function () {
 			var checkResult = function (script, expectedResult, message) {
-				it(script.replace(/\n/g, " | ") + " => result = " + JSON.stringify(expectedResult) + " // " + message, function () {
+				it(JSON.stringify(script) + " => result = " + JSON.stringify(expectedResult) + " // " + message, function () {
 					//var rewritten = rewrite(evalCs(script).result);
 					var result = PatternScript.reduce(/*rewrite(*/PatternScript.evalPs(script).result/*)*/);
 
@@ -32,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				});
 			};
 
-			checkResult("result = 2", 2, "literal assignment");
+			checkResult({ result: "2" }, 2, "literal assignment");
 		});
 	</script>
 </body>
