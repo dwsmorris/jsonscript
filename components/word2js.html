@@ -2,7 +2,6 @@
 <link rel="import" href="is-literal.html">
 
 <script>
-	window.addEventListener('WebComponentsReady', function () {
 		PatternScript.word2js = function (word) {
 			if (PatternScript.isLiteral(word)) {
 				return word;
@@ -27,5 +26,4 @@
 				}
 			}
 		};
-	});
 </script>

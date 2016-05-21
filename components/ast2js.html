@@ -6,7 +6,6 @@
 <link rel="import" href="word2js.html">
 
 <script>
-	window.addEventListener('WebComponentsReady', function () {
 		PatternScript.ast2js = function (ast, parameters) {
 			if (_.isArray(ast)) {
 				return "[" + R.reduce(function (acc, term) {
@@ -26,5 +25,4 @@
 				}
 			}
 		};
-	});
 </script>

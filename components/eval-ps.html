@@ -2,9 +2,7 @@
 <link rel="import" href="ps2js.html">
 
 <script>
-	window.addEventListener('WebComponentsReady', function () {
 		PatternScript.evalPs = function (cs) {
 			return new Function(PatternScript.ps2js(cs))();
 		};
-	});
 </script>

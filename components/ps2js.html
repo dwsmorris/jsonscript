@@ -7,7 +7,6 @@
 <link rel="import" href="word2js.html">
 
 <script>
-	window.addEventListener('WebComponentsReady', function () {
 		PatternScript.ps2js = function (cs) {
 			// split into key-value pairs
 			var pairs = R.toPairs(cs);
@@ -264,5 +263,4 @@
 			console.log(script);
 			return script;
 		};
-	});
 </script>
