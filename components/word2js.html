@@ -1,5 +1,6 @@
 ﻿<link rel="import" href="pattern-script.html">
 <link rel="import" href="is-literal.html">
+<link rel="import" href="array.html" />
 
 <script>
 		PatternScript.word2js = function (word) {
@@ -20,7 +21,7 @@
 					case "!=": return "cs_notEquals";
 					case "<=": return "cs_lessThanOrEqualTo";
 					case ">=": return "cs_greaterThanOrEqualTo";
-					case "[]": return "cs_array";
+					case "[]": return "PatternScript.array";
 
 					default: return word;
 				}

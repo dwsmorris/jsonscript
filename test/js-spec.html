@@ -31,8 +31,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					expect(result).to.deep.equal(expectedResult);
 				});
 			};
-
-			checkResult({ result: "2" }, 2, "literal assignment");
+		
+			checkResult({
+				"result": "2"
+			}, 2, "literal assignment");
+			
+			checkResult({
+				"result": "([] 2 3)"
+			}, [2, 3], "array assignment");
 		});
 	</script>
 </body>

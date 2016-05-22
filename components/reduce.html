@@ -6,17 +6,17 @@
 		PatternScript.reduce = function (ast) {
 			if (_.isArray(ast)) {
 				// apply rest to first
-				var fn = reduce(ast[0]);
+				var fn = PatternScript.reduce(ast[0]);
 				var rest = R.tail(ast);
 
-				var args = (fn && fn.macro) ? rest : R.map(reduce, rest);
+				var args = (fn && fn.macro) ? rest : R.map(PatternScript.reduce, rest);
 
-				if (!_.isFunction(fn)) {
+				if (!_.isFunction(fn)) { // TODO: remove this clause?
 					return R.concat([fn], args);
 				} else {
 					var result = R.apply(fn, args);
 					while (_.isArray(result) && result.length > 0 && (_.isFunction(result[0]) || _.isArray(result[0]))) { // repeatedly reduce
-						result = reduce(result);
+						result = PatternScript.reduce(result);
 					}
 
 					return result;
