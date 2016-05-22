@@ -31,14 +31,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					expect(result).to.deep.equal(expectedResult);
 				});
 			};
-		
+			/*
 			checkResult({
 				"result": "2"
-			}, 2, "literal assignment");
-			
+			}, 2, "number");
+
+			checkResult({
+				"result": "([] 2)"
+			}, [2], "single member array");
+
 			checkResult({
 				"result": "([] 2 3)"
-			}, [2, 3], "array assignment");
+			}, [2, 3], "multi-member array");
+
+			checkResult({
+				"result": "[] 2 3"
+			}, [2, 3], "array assignment without brackets");
+			*/
+			checkResult({
+				"result": "[] 2 (+ 1 2) 4"
+			}, [2, 3, 4], "evaluation within root level bracketless array");
+
+			checkResult({
+				"result": "([] 2 (+ 1 2) 4)"
+			}, [2, 3, 4], "evaluation within root level bracketed array");
+
+			checkResult({
+				"result": "'hello'"
+			}, "hello", "string literal");
 		});
 	</script>
 </body>

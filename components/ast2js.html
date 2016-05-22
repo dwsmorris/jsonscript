@@ -12,10 +12,11 @@
 					return R.concat(acc, PatternScript.ast2js(term, parameters));
 				}, [], ast).join(", ") + "]";
 			} else {
-				var noFurtherCurrying = PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1) || (ast.indexOf("R.") === 0); // function parameters will already be curried
+				var jsWord = PatternScript.word2js(ast);
+				var noFurtherCurrying = PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1) || (jsWord.indexOf("R.") === 0); // function parameters will already be curried
 
 				var js = (noFurtherCurrying ? "" : "R.curry(") +
-					PatternScript.word2js(ast) +
+					jsWord +
 					(noFurtherCurrying ? "" : ")");
 
 				if (PatternScript.isMacro(ast)) {
