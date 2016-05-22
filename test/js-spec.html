@@ -59,6 +59,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			checkResult({
 				"result": "'hello'"
 			}, "hello", "string literal");
+
+			checkResult({
+				"result": "(+ 2 3)"
+			}, 5, "bracketted function application");
+
+			checkResult({
+				"result": "+ 2 3"
+			}, 5, "bracketless function application");
 		});
 	</script>
 </body>
