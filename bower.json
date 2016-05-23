@@ -14,7 +14,8 @@
   "dependencies": {
     "ramda-import": "dwsmorris/ramda-import",
     "webcomponentsjs": "polymer/webcomponentsjs#^0.7.22",
-    "lodash-import": "dwsmorris/lodash-import"
+    "lodash-import": "dwsmorris/lodash-import",
+    "matches.js": "dwsmorris/matches.js#master"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
