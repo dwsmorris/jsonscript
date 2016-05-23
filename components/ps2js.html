@@ -18,11 +18,11 @@
 
 				var isUnencapsulatedAst = R.reduce(function (acc, character, index) {
 					if (character === "(") {
-						return _.merge({
+						return R.merge({
 							astLevel: acc.astLevel + 1
 						}, acc);
 					} else if (character === ")") {
-						return _.merge({
+						return R.merge({
 							astLevel: acc.astLevel - 1,
 							isUnencapsulatedAst: ((acc.astLevel === 1) && (index !== astWithoutStrings.length - 1)) ? true : undefined
 						}, acc);
@@ -114,10 +114,10 @@
 					var currentPatternMatchIndex = acc.patternMatchIndices[equation.name];
 
 					return {
-						equations: R.concat(acc.equations, [_.merge(equation, {
+						equations: R.concat(acc.equations, [R.merge(equation, {
 							patternMatchIndex: currentPatternMatchIndex
-						}, {})]),
-						patternMatchIndices: R.mergeAll([acc.patternMatchIndices, R.zipObj([equation.name], [currentPatternMatchIndex + 1])])
+						})]),
+						patternMatchIndices: R.merge(acc.patternMatchIndices, R.zipObj([equation.name], [currentPatternMatchIndex + 1]))
 					};
 				}
 			}, {
