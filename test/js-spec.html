@@ -17,6 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 	<!-- Step 1: import the element to test -->
 	<link rel="import" href="../bower_components/ramda-import/ramda-import.html">
+	<link rel="import" href="../bower_components/lodash-import/lodash-import.html">
 	<link rel="import" href="../components/eval-ps.html">
 	<link rel="import" href="../components/reduce.html">
 </head>
@@ -89,6 +90,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			checkResult({
 				"result": "(if true 10 (/ 1 0))"
 			}, 10, "macro execution");
+
+			checkResult({
+				"plus"	: "+",
+				"result": "(plus 2 3)"
+			}, 5, "js function assignment");
+
+			checkResult({
+				"square x"	: "(* x x)",
+				"result"	: "(square 3)"
+			}, 9, "named parameters");
+
+			checkResult({
+				"result": "(Math.sqrt 9)"
+			}, 3, "js namespace functions");
+
+			checkResult({
+				"plus x y"	: "(+ x y)",
+				"result"	: "plus 2 3"
+			}, 5, "define multiple function arguments");
+
+			checkResult({
+				"hypotenuse x y": "(Math.sqrt (+ (* x x) (* y y)))",
+				"result": "((hypotenuse 3) 4)"
+			}, 5, "partial application of lisp functions (no rewrite possible)");
+
+			checkResult({
+				"result": "(_.isNumber 3)"
+			}, true, "access to external namespaces");
+
+			checkResult({
+				"result": "(R.reduce + 0 ([] 1 2 3))"
+			}, 6, "passing js functions to higher order js function");
+
+			checkResult({
+				"square x"	: "(* x x)",
+				"result"	: "(R.map square ([] 2 3))"
+			}, [4, 9], "pass lisp function higher order js function");
+
+			checkResult({
+				"factorial x"	: "if (< x 2) 1 (* x (factorial (- x 1))",
+				"result"		: "factorial 4"
+			}, 24, "recursive lisp function");
+
 		});
 	</script>
 </body>
