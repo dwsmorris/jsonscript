@@ -2,6 +2,7 @@
 <link rel="import" href="pattern-script.html">
 <link rel="import" href="is-literal.html">
 <link rel="import" href="array.html" />
+<link rel="import" href="if.html" />
 
 <script>
 		PatternScript.word2js = function (word) {
@@ -10,18 +11,18 @@
 			} else {
 				switch (word) {
 					case "if":
-						return "cs_" + word;
+						return "PatternScript." + word;
 
 					case "+": return "R.add";
-					case "-": return "cs_minus";
-					case "*": return "cs_multiply";
-					case "/": return "cs_divide";
-					case "===": return "cs_equals";
-					case "<": return "cs_lessThan";
-					case ">": return "cs_greaterThan";
-					case "!=": return "cs_notEquals";
-					case "<=": return "cs_lessThanOrEqualTo";
-					case ">=": return "cs_greaterThanOrEqualTo";
+					case "-": return "R.subtract";
+					case "*": return "R.multiply";
+					case "/": return "R.divide";
+					case "===": return "R.equals";
+					case "<": return "R.lt";
+					case ">": return "R.gt";
+					case "!==": return "R.eqBy(R.not)";
+					case "<=": return "R.lte";
+					case ">=": return "R.gte";
 					case "[]": return "PatternScript.array";
 
 					default: return word;

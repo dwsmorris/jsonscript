@@ -1,0 +1,8 @@
+﻿<link rel="import" href="pattern-script.html">
+<link rel="import" href="reduce.html" />
+
+<script>
+	PatternScript.if = function (condition, continuation, alternative) {
+		return PatternScript.reduce(condition) ? PatternScript.reduce(continuation) : PatternScript.reduce(alternative);
+	};
+</script>
