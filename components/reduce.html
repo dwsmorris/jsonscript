@@ -9,29 +9,32 @@
 				var fn = PatternScript.reduce(ast[0]);
 				var rest = R.tail(ast);
 
-				var args = /*(fn && fn.macro) ? rest : */R.map(PatternScript.reduce, rest);
+				var args = (fn && fn.macro) ? rest : R.map(PatternScript.reduce, rest);
 
-				/*if (!_.isFunction(fn)) { // TODO: remove this clause?
+				if (!_.isFunction(fn)) { 
 					return R.concat([fn], args);
-				} else {*/
+				} else {
 					var result = R.apply(fn, args);
-					/*
-					while (_.isArray(result) && result.length > 0 && (_.isFunction(result[0]) || _.isArray(result[0]))) { // repeatedly reduce
+
+					var isReducible = function (answer) {
+						return _.isArray(answer) && answer.length > 0 && (_.isFunction(answer[0]) || (_.isArray(answer[0]) && isReducible(answer[0])));
+					};
+					
+					while (isReducible(result)) { // repeatedly reduce
 						result = PatternScript.reduce(result);
 					}
-					*/
+					
+				/*
 					if (fn.arity > 0) {
 						result = PatternScript.reduce(result);
 
 						var arity = fn.arity - args.length;
 
-						if (arity > 0) {
-							result.arity = arity;
-						}
+						result.arity = arity;
 					}
-					
+					*/
 					return result;
-				//}
+				}
 			} else {
 				return ast;
 			}
