@@ -15,8 +15,12 @@
 					return R.concat([fn], args);
 				} else {
 					var result = R.apply(fn, args);
+
+					var isReducible = function (answer) {
+						return _.isArray(answer) && answer.length > 0 && (_.isFunction(answer[0]) || (_.isArray(answer[0]) && isReducible(answer[0])));
+					};
 					
-					while (_.isArray(result) && result.length > 0 && (_.isFunction(result[0]) || _.isArray(result[0]))) { // repeatedly reduce
+					while (isReducible(result)) { // repeatedly reduce
 						result = PatternScript.reduce(result);
 					}
 					

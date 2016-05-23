@@ -48,11 +48,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			checkResult({
 				"result": "[] 2 3"
 			}, [2, 3], "array assignment without brackets");
-			/*
+			
 			checkResult({
 				"result": "[] ([] 1 2 3)"
 			}, [[1,2,3]], "embedded array");
-			*/
+			
 			checkResult({
 				"result": "[] 2 (+ 1 2) 4"
 			}, [2, 3, 4], "evaluation within root level bracketless array");
@@ -212,13 +212,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"match 1 b"	: "* b b",
 				"result"	: "match 1 2 3"
 			}, undefined, "pattern matched function fails on extra arguments");
-			/*
+			
 			checkResult({
 				"match ([] a)"	: "a",
-				"result"	: "[] ([] 1 2 3)"
+				"result"	: "match ([] ([] 1 2 3))"
 			}, [1, 2, 3], "match embedded list in a list");
-			*/
-			
+						
 			checkResult({
 				"result": "(if true 10 (/ 1 0))"
 			}, 10, "macro execution");
