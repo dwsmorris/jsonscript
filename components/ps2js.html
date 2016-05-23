@@ -196,7 +196,7 @@
 					}
 
 					if (isAst) {
-						jsExpression = "(function() {var temp = " + jsExpression + "; temp.arity = " + passedParameters.length + "; return temp;})()";
+						jsExpression = "(function() {var temp = " + jsExpression + "; temp.ast = true; return temp;})()";
 					}
 
 					var output = equation.patternMatchIndex ? "" : "var "; // not 0 or undefined

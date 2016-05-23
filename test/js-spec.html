@@ -48,11 +48,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			checkResult({
 				"result": "[] 2 3"
 			}, [2, 3], "array assignment without brackets");
-
+			/*
 			checkResult({
 				"result": "[] ([] 1 2 3)"
 			}, [[1,2,3]], "embedded array");
-
+			*/
 			checkResult({
 				"result": "[] 2 (+ 1 2) 4"
 			}, [2, 3, 4], "evaluation within root level bracketless array");
@@ -127,7 +127,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"square x"	: "(* x x)",
 				"result"	: "(R.map square ([] 2 3))"
 			}, [4, 9], "pass lisp function higher order js function");
-			/*
+			
 			checkResult({
 				"factorial x"	: "if (< x 2) 1 (* x (factorial (- x 1))",
 				"result"		: "factorial 4"
@@ -212,17 +212,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"match 1 b"	: "* b b",
 				"result"	: "match 1 2 3"
 			}, undefined, "pattern matched function fails on extra arguments");
-
+			/*
 			checkResult({
 				"match ([] a)"	: "a",
 				"result"	: "[] ([] 1 2 3)"
 			}, [1, 2, 3], "match embedded list in a list");
 			*/
-			/*
+			
 			checkResult({
 				"result": "(if true 10 (/ 1 0))"
 			}, 10, "macro execution");
-			*/
+			
 		});
 	</script>
 </body>

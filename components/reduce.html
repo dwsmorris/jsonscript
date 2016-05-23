@@ -9,7 +9,7 @@
 				var fn = PatternScript.reduce(ast[0]);
 				var rest = R.tail(ast);
 
-				var args = /*(fn && fn.macro) ? rest : */R.map(PatternScript.reduce, rest);
+				var args = (fn && fn.macro) ? rest : R.map(PatternScript.reduce, rest);
 
 				if (!_.isFunction(fn)) { 
 					return R.concat([fn], args);
@@ -26,9 +26,7 @@
 
 						var arity = fn.arity - args.length;
 
-						if (arity > 0) {
-							result.arity = arity;
-						}
+						result.arity = arity;
 					}
 					*/
 					return result;
