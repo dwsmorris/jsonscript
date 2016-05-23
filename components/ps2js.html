@@ -6,6 +6,7 @@
 <link rel="import" href="ast2js.html">
 <link rel="import" href="is-literal.html">
 <link rel="import" href="word2js.html">
+<link rel="import" href="reduce.html">
 
 <script>
 		PatternScript.ps2js = function (cs) {
@@ -203,7 +204,9 @@
 					if (isPatternMatched) {
 						// guarded if parameters contains function (internal patternscript, externally namespaced function, or local definition)
 						var isFunction = function (term) {
-							return (term.indexOf(".") !== -1) || (PatternScript.word2js(term) !== term) || R.contains(term, localDefinitions);
+							var keyword = PatternScript.word2js(term) !== term;
+
+							return (term.indexOf(".") !== -1) /*what about decimals?*/ || (keyword && (term !== "[]") && (term !== "{}")) || R.contains(term, localDefinitions);
 						};
 
 						var isGuarded = R.any(isFunction, R.flatten(equation.parameters));
@@ -219,17 +222,17 @@
 								}
 							};
 
-							jsExpression = "function(args) {return R.all(R.identity, cs_reduce(" + PatternScript.ast2js(parameters.map(processParameters), defined) + ")) ? args : false;}, " + jsExpression;
+							jsExpression = "function(args) {return R.all(R.identity, PatternScript.reduce(" + PatternScript.ast2js(parameters.map(processParameters), defined) + ")) ? args : false;}, " + jsExpression;
 						} else {
 							var getPatternString = function (pattern) {
 								if (_.isArray(pattern)) {
-									return "[" + R.map(getPatternString, pattern).join(", ") + "]";
+									return "[" + R.map(getPatternString, pattern.slice(1)).join(", ") + "]";
 								} else {
 									return pattern;
 								}
 							};
 
-							var patternString = getPatternString(parameters).slice(1, -1); // remove outer braces from pattern string
+							var patternString = R.map(getPatternString, parameters); // remove outer braces from pattern string
 
 							jsExpression = "'" + patternString + "', " + jsExpression;
 						}

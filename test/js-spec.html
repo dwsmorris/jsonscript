@@ -138,6 +138,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"match x"	: "x",
 				"result"	: "match 1"
 			}, "too low", "pattern match against constant");
+
+			checkResult({
+				"match 1"	: "'too low'",
+				"match x"	: "x",
+				"result"	: "match 2"
+			}, 2, "pattern match against trivial variable");
+
+			checkResult({
+				"match 1"	: "'too low'",
+				"match x"	: "(* x x)",
+				"result"	: "match 2"
+			}, 4, "pattern match against ast equation");
+
+			checkResult({
+				"match 1"	: "'matched'",
+				"match _"	: "'default'",
+				"result"	: "match 2"
+			}, 'default', "pattern match fallthrough default");
+
+			checkResult({
+				"match 1"	: "'matched'",
+				"result"	: "match 2"
+			}, undefined, "pattern match returns undefined when patterns exhausted");
+			
+			checkResult({
+				"match ([] 0 0 0)":		"0",
+				"match ([] a b c)":		"+ (+ a b) c",
+				"result":				"match ([] 1 2 3)"
+			}, 6, "pattern match deconstructs list");
+
 		});
 	</script>
 </body>
