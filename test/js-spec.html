@@ -132,7 +132,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"factorial x"	: "if (< x 2) 1 (* x (factorial (- x 1))",
 				"result"		: "factorial 4"
 			}, 24, "recursive lisp function");
-
+			
+			checkResult({
+				"match 1"	: "'too low'",
+				"match x"	: "x",
+				"result"	: "match 1"
+			}, "too low", "pattern match against constant");
 		});
 	</script>
 </body>

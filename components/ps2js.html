@@ -1,5 +1,6 @@
 ﻿<link rel="import" href="../../lodash-import/lodash-import.html">
 <link rel="import" href="../../ramda-import/ramda-import.html">
+<link rel="import" href="../../matches.js/matches.js.html" />
 <link rel="import" href="pattern-script.html">
 <link rel="import" href="tokenize.html">
 <link rel="import" href="ast2js.html">
@@ -116,7 +117,7 @@
 						equations: R.concat(acc.equations, [_.merge(equation, {
 							patternMatchIndex: currentPatternMatchIndex
 						}, {})]),
-						patternMatchIndices: _.merge(R.zipObj([equation.name], [currentPatternMatchIndex + 1]), acc.patternMatchIndices, {})
+						patternMatchIndices: R.mergeAll([acc.patternMatchIndices, R.zipObj([equation.name], [currentPatternMatchIndex + 1])])
 					};
 				}
 			}, {
