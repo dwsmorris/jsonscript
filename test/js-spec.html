@@ -122,17 +122,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			checkResult({
 				"result": "(R.reduce + 0 ([] 1 2 3))"
 			}, 6, "passing js functions to higher order js function");
-			/*
+			
 			checkResult({
 				"square x"	: "(* x x)",
 				"result"	: "(R.map square ([] 2 3))"
 			}, [4, 9], "pass lisp function higher order js function");
-
+			/*
 			checkResult({
 				"factorial x"	: "if (< x 2) 1 (* x (factorial (- x 1))",
 				"result"		: "factorial 4"
 			}, 24, "recursive lisp function");
-			
+			*/
 			checkResult({
 				"match 1"	: "'too low'",
 				"match x"	: "x",
@@ -212,7 +212,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"match 1 b"	: "* b b",
 				"result"	: "match 1 2 3"
 			}, undefined, "pattern matched function fails on extra arguments");
-
+			/*
 			checkResult({
 				"match ([] a)"	: "a",
 				"result"	: "[] ([] 1 2 3)"
