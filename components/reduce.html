@@ -20,10 +20,16 @@
 						result = PatternScript.reduce(result);
 					}
 					*/
-					if (fn.ast) {
+					if (fn.arity > 0) {
 						result = PatternScript.reduce(result);
-					}
 
+						var arity = fn.arity - args.length;
+
+						if (arity > 0) {
+							result.arity = arity;
+						}
+					}
+					
 					return result;
 				//}
 			} else {
