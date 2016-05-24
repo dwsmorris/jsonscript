@@ -65,8 +65,9 @@
 
 			// split each line into name and expression
 			var equations = R.reduce(function (acc, sides) {
-				var signatureComponents = getSignatureComponents(encaseRootInBraces(sides[0].trim()));
-				var lisp = encaseRootInBraces(sides[1].trim());
+				var lhLisp = encaseRootInBraces(sides[0].trim());
+				var signatureComponents = getSignatureComponents(lhLisp);
+				var rhLisp = encaseRootInBraces(sides[1].trim());
 				var name = signatureComponents.name;
 				var parameters = signatureComponents.parameters;
 				var localDefinitions = (acc.length === 0) ? [name] : R.uniq(R.concat(R.last(acc).localDefinitions, [name]));
@@ -79,11 +80,12 @@
 					name: name,
 					parameters: parameters,
 					expression: extractComponents(PatternScript.tokenize({
-						characterArray: lisp.split("")
+						characterArray: rhLisp.split("")
 					})[0]),
 					preWhitespace: sides[0].split(/[\w\(]/g)[0],
 					localDefinitions: localDefinitions,
-					passedParameters: passedParameters
+					passedParameters: passedParameters,
+					thunk: (lhLisp[0] === "(") && (passedParameters.length === 0)
 				}]);
 			}, [], pairs);
 
@@ -187,7 +189,7 @@
 					var jsExpression = PatternScript.ast2js(expression, defined);
 					var isAst = passedParameters.length > 0;
 
-					if (isAst || isPatternMatched) {
+					if (isAst || equation.thunk || isPatternMatched) {
 						jsExpression = "function(" + passedParameters.join(", ") + ") {return " + jsExpression + ";}";
 					}
 

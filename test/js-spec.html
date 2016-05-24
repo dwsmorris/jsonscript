@@ -274,7 +274,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"quotient x y"			: "/ x y",
 				"result"				: "[] (quotient 2 0) (quotient 8 2)"
 			}, ['undefined', 4], "guard range in second, anonymous parameter");
-
+			
+			checkResult({
+				"(thunk)": "1",
+				"result": "(thunk)"
+			}, 1, "parameterless function call");
 		});
 	</script>
 </body>
