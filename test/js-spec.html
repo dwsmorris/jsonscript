@@ -262,6 +262,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"result"					: "[] (whatIs 2) (whatIs 'hello')"
 			}, ['2 is a number', 'hello is a string']);
 
+			checkResult({
+				"factorial 1"			: "1",
+				"factorial (< x 1)"		: "undefined",
+				"factorial n"			: "* n (factorial (- n 1))",
+				"result"				: "[] (factorial 0) (factorial 3)"
+			}, [undefined, 6], "factorial with negative range guard");
+
+			checkResult({
+				"quotient _ (=== _ 0)"	: "'undefined'",
+				"quotient x y"			: "/ x y",
+				"result"				: "[] (quotient 2 0) (quotient 8 2)"
+			}, ['undefined', 4], "guard range in second, anonymous parameter");
+
 		});
 	</script>
 </body>
