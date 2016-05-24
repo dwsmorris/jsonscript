@@ -3,6 +3,7 @@
 <link rel="import" href="is-literal.html">
 <link rel="import" href="array.html" />
 <link rel="import" href="if.html" />
+<link rel="import" href="plus.html" />
 
 <script>
 		PatternScript.word2js = function (word) {
@@ -13,7 +14,7 @@
 					case "if":
 						return "PatternScript." + word;
 
-					case "+": return "R.add";
+					case "+": return "PatternScript.plus";
 					case "-": return "R.subtract";
 					case "*": return "R.multiply";
 					case "/": return "R.divide";

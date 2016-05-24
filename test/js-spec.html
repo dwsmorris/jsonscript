@@ -32,6 +32,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					expect(result).to.deep.equal(expectedResult);
 				});
 			};
+
+			/*
+			checkResult({
+				"match a a"	: "'matched'",
+				"result"	: "match 1 2"
+			}, undefined, "enforce constraints of same symbol in pattern"); // matches #1
+			*/
+			/*
+			checkResult({
+				"a"					: "1",
+				"match ([] 1 a 3)"	: "a",
+				"result"			: "[] (match ([] 1 2 3)) a"
+			}, [2, 1], "does not capture variables"); // problematic: 'a' can now reference a local definition so should be substituted
+			*/
 			
 			checkResult({
 				"result": "2"
@@ -215,13 +229,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			
 			checkResult({
 				"match ([] a)"	: "a",
-				"result"	: "match ([] ([] 1 2 3))"
+				"result"		: "match ([] ([] 1 2 3))"
 			}, [1, 2, 3], "match embedded list in a list");
 						
 			checkResult({
 				"result": "(if true 10 (/ 1 0))"
 			}, 10, "macro execution");
 			
+			checkResult({
+				"match ([] ([] a))"	: "a",
+				"result"			: "match ([] ([] 1 2 3))"
+			}, undefined, "rejects mismatched args in embedded list");
+
+			checkResult({
+				"match ([] 1 _ _)"	: "12",
+				"result"			: "match ([] 1 'cat' 'dog')"
+			}, 12, "match multiple wildcards");
+
+			checkResult({
+				"result": "[] ([] 1) ([] 2)"
+			}, [[1], [2]], "encases unencapsulated array of arrays");
+
+			checkResult({
+				"factorial 1"	: "1",
+				"factorial n"	: "* n (factorial (- n 1))",
+				"result"		: "factorial 4"
+			}, 24, "simple pattern matched factorial");
+			
+			checkResult({
+				"whatIs (_.isNumber x)"		: "+ x ' is a number'",
+				"whatIs (_.isString x)"		: "+ x ' is a string'",
+				"result"					: "[] (whatIs 2) (whatIs 'hello')"
+			}, ['2 is a number', 'hello is a string']);
+
 		});
 	</script>
 </body>

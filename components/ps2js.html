@@ -214,7 +214,7 @@
 						if (isGuarded) {
 							var processParameters = function (parameter, argumentIndex) {
 								if (_.isArray(parameter)) {
-									return R.map(R.partial(processParameters, [_, argumentIndex]), parameter);
+									return R.map(_.partial(processParameters, _, argumentIndex), parameter);
 								} else {
 									var index = (parameter === "_") ? argumentIndex : R.indexOf(parameter, passedParameters);
 
