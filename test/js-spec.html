@@ -279,6 +279,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"(thunk)": "1",
 				"result": "(thunk)"
 			}, 1, "parameterless function call");
+
+			checkResult({
+				"(thunk)": "1",
+				"result": "(thunk 2 3)"
+			}, 1, "extraenous arguments to a thunk ignored");
 		});
 	</script>
 </body>
