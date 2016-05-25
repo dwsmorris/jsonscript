@@ -288,6 +288,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			checkResult({
 				"result": ". ([] 1 2 3) 1"
 			}, 2, "indexing array");
+
+			checkResult({
+				"result": "({})"
+			}, {}, "empty object");
 		});
 	</script>
 </body>

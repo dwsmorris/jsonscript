@@ -5,6 +5,7 @@
 <link rel="import" href="if.html" />
 <link rel="import" href="plus.html" />
 <link rel="import" href="dot.html" />
+<link rel="import" href="object.html" />
 
 <script>
 		PatternScript.word2js = function (word) {
@@ -26,6 +27,7 @@
 					case "<="	: return "R.lte";
 					case ">="	: return "R.gte";
 					case "[]"	: return "PatternScript.array";
+					case "{}"	: return "PatternScript.object";
 					case "."	: return "PatternScript.dot";
 
 					default: return word;
