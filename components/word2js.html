@@ -4,6 +4,7 @@
 <link rel="import" href="array.html" />
 <link rel="import" href="if.html" />
 <link rel="import" href="plus.html" />
+<link rel="import" href="dot.html" />
 
 <script>
 		PatternScript.word2js = function (word) {
@@ -14,17 +15,18 @@
 					case "if":
 						return "PatternScript." + word;
 
-					case "+": return "PatternScript.plus";
-					case "-": return "R.subtract";
-					case "*": return "R.multiply";
-					case "/": return "R.divide";
-					case "===": return "R.equals";
-					case "<": return "R.lt";
-					case ">": return "R.gt";
-					case "!==": return "R.eqBy(R.not)";
-					case "<=": return "R.lte";
-					case ">=": return "R.gte";
-					case "[]": return "PatternScript.array";
+					case "+"	: return "PatternScript.plus";
+					case "-"	: return "R.subtract";
+					case "*"	: return "R.multiply";
+					case "/"	: return "R.divide";
+					case "==="	: return "R.equals";
+					case "<"	: return "R.lt";
+					case ">"	: return "R.gt";
+					case "!=="	: return "R.eqBy(R.not)";
+					case "<="	: return "R.lte";
+					case ">="	: return "R.gte";
+					case "[]"	: return "PatternScript.array";
+					case "."	: return "PatternScript.dot";
 
 					default: return word;
 				}
