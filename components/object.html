@@ -3,6 +3,7 @@
 <script>
 	PatternScript.object = function () {
 		//return Array.prototype.slice.call(arguments);
-		return {};
+		
+		return R.fromPairs(R.splitEvery(2, arguments));
 	};
 </script>
