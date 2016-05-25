@@ -282,6 +282,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			checkResult({
 				"result": "({} 'a' 1 'b' 2)"
 			}, { a: 1, b: 2 }, "initialized object");
+
+			checkResult({
+				"result": "(. ({} 'a' 1 'b' 2) 'b')"
+			}, 2, "indexed object");
+
+			checkResult({
+				"(one)"		: "1",
+				"object"	: "({} 'a' one)",
+				"result"	: "((. object 'a'))"
+			}, 1, "method activation");
+
+			checkResult({
+				"(twice x)"	: "(* x 2)",
+				"object"	: "({} 'twice' twice)",
+				"result"	: "((. object 'twice') 3)"
+			}, 6, "parameterized method activation");
 		});
 	</script>
 </body>

@@ -1,9 +1,8 @@
-﻿<link rel="import" href="pattern-script.html">
+﻿<link rel="import" href="../../ramda-import/ramda-import.html">
+<link rel="import" href="pattern-script.html">
 
 <script>
 	PatternScript.object = function () {
-		//return Array.prototype.slice.call(arguments);
-		
 		return R.fromPairs(R.splitEvery(2, arguments));
 	};
 </script>
