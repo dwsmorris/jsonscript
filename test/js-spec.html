@@ -60,17 +60,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}, [2, 3], "multi-member array");
 			
 			checkResult({
-				"result": "[] 2 3"
-			}, [2, 3], "array assignment without brackets");
-			
-			checkResult({
-				"result": "[] ([] 1 2 3)"
+				"result": "([] ([] 1 2 3))"
 			}, [[1,2,3]], "embedded array");
 			
-			checkResult({
-				"result": "[] 2 (+ 1 2) 4"
-			}, [2, 3, 4], "evaluation within root level bracketless array");
-
 			checkResult({
 				"result": "([] 2 (+ 1 2) 4)"
 			}, [2, 3, 4], "evaluation within root level bracketed array");
@@ -82,10 +74,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			checkResult({
 				"result": "(+ 2 3)"
 			}, 5, "bracketted function application");
-
-			checkResult({
-				"result": "+ 2 3"
-			}, 5, "bracketless function application");
 
 			checkResult({
 				"result": "(- 10 (* 2 3))"
@@ -111,8 +99,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}, 5, "js function assignment");
 			
 			checkResult({
-				"square x"	: "(* x x)",
-				"result"	: "(square 3)"
+				"(square x)"	: "(* x x)",
+				"result"		: "(square 3)"
 			}, 9, "named parameters");
 			
 			checkResult({
@@ -120,13 +108,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}, 3, "js namespace functions");
 			
 			checkResult({
-				"plus x y"	: "(+ x y)",
-				"result"	: "plus 2 3"
+				"(plus x y)"	: "(+ x y)",
+				"result"		: "(plus 2 3)"
 			}, 5, "define multiple function arguments");
 			
 			checkResult({
-				"hypotenuse x y": "(Math.sqrt (+ (* x x) (* y y)))",
-				"result": "((hypotenuse 3) 4)"
+				"(hypotenuse x y)"	: "(Math.sqrt (+ (* x x) (* y y)))",
+				"result"			: "((hypotenuse 3) 4)"
 			}, 5, "partial application of lisp functions (no rewrite possible)");
 			
 			checkResult({
@@ -138,98 +126,92 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}, 6, "passing js functions to higher order js function");
 			
 			checkResult({
-				"square x"	: "(* x x)",
-				"result"	: "(R.map square ([] 2 3))"
+				"(square x)"	: "(* x x)",
+				"result"		: "(R.map square ([] 2 3))"
 			}, [4, 9], "pass lisp function higher order js function");
 			
 			checkResult({
-				"factorial x"	: "if (< x 2) 1 (* x (factorial (- x 1))",
-				"result"		: "factorial 4"
+				"(factorial x)"	: "(if (< x 2) 1 (* x (factorial (- x 1)))",
+				"result"		: "(factorial 4)"
 			}, 24, "recursive lisp function");
 			
 			checkResult({
-				"match 1"	: "'too low'",
-				"match x"	: "x",
-				"result"	: "match 1"
+				"(match 1)"	: "'too low'",
+				"(match x)"	: "x",
+				"result"	: "(match 1)"
 			}, "too low", "pattern match against constant");
 
 			checkResult({
-				"match 1"	: "'too low'",
-				"match x"	: "x",
-				"result"	: "match 2"
+				"(match 1)"	: "'too low'",
+				"(match x)"	: "x",
+				"result"	: "(match 2)"
 			}, 2, "pattern match against trivial variable");
 
 			checkResult({
-				"match 1"	: "'too low'",
-				"match x"	: "(* x x)",
-				"result"	: "match 2"
+				"(match 1)"	: "'too low'",
+				"(match x)"	: "(* x x)",
+				"result"	: "(match 2)"
 			}, 4, "pattern match against ast equation");
 
 			checkResult({
-				"match 1"	: "'matched'",
-				"match _"	: "'default'",
-				"result"	: "match 2"
+				"(match 1)"	: "'matched'",
+				"(match _)"	: "'default'",
+				"result"	: "(match 2)"
 			}, 'default', "pattern match fallthrough default");
 
 			checkResult({
-				"match 1"	: "'matched'",
-				"result"	: "match 2"
+				"(match 1)"	: "'matched'",
+				"result"	: "(match 2)"
 			}, undefined, "pattern match returns undefined when patterns exhausted");
 			
 			checkResult({
-				"match ([] 0 0 0)"	: "0",
-				"match ([] a b c)"	: "+ (+ a b) c",
-				"result"			: "match ([] 1 2 3)"
+				"(match ([] 0 0 0))"	: "0",
+				"(match ([] a b c))"	: "(+ (+ a b) c)",
+				"result"				: "(match ([] 1 2 3))"
 			}, 6, "pattern match deconstructs list");
 
 			checkResult({
-				"(match ([] 0 0 0))"	: "0",
-				"(match ([] a b c))"	: "(+ (+ a b) c)",
-				"result"				: "match ([] 1 2 3)"
-			}, 6, "pattern match with braced left-hand-side");
-
-			checkResult({
-				"reciprocal 0 _"	: "'undefined'",
-				"reciprocal x y"	: "/ y x",
-				"half"				: "reciprocal 2",
-				"result"			: "half 10"
+				"(reciprocal 0 _)"	: "'undefined'",
+				"(reciprocal x y)"	: "(/ y x)",
+				"half"				: "(reciprocal 2)",
+				"result"			: "(half 10)"
 			}, 5, "curried pattern match 1");
 
 			checkResult({
-				"reciprocal 0 _": "'undefined'",
-				"reciprocal x y": "/ y x",
-				"divideByZero": "reciprocal 0",
-				"result": "divideByZero 10"
+				"(reciprocal 0 _)": "'undefined'",
+				"(reciprocal x y)": "(/ y x)",
+				"divideByZero": "(reciprocal 0)",
+				"result": "(divideByZero 10)"
 			}, 'undefined', "curried pattern match 2");
 
 			checkResult({
-				"match a 2 b"	: "+ a b",
-				"result"		: "match 1 2 3"
+				"(match a 2 b)"	: "(+ a b)",
+				"result"		: "(match 1 2 3)"
 			}, 4, "match literals in a list");
 
 			checkResult({
-				"match a 1 b"	: "+ a b",
-				"result"		: "match 1 2 3"
+				"(match a 1 b)"	: "(+ a b)",
+				"result"		: "(match 1 2 3)"
 			}, undefined, "rejects integer mismatch in list");
 
 			checkResult({
-				"match ([] a b)"	: "+ a b",
-				"result"			: "match (1 2 3)"
+				"(match ([] a b))"	: "(+ a b)",
+				"result"			: "(match (1 2 3))"
 			}, undefined, "rejects mismatched arguments in a list");
 
 			checkResult({
-				"match a b"	: "* b b",
-				"result"	: "match 1 2 3"
+				"(match a b)"	: "(* b b)",
+				"result"		: "(match 1 2 3)"
 			}, 4, "non-pattern matched function ignores extra arguments");
 
 			checkResult({
-				"match 1 b"	: "* b b",
-				"result"	: "match 1 2 3"
+				"(match 1 b)"	: "(* b b)",
+				"result"		: "(match 1 2 3)"
 			}, undefined, "pattern matched function fails on extra arguments");
 			
 			checkResult({
-				"match ([] a)"	: "a",
-				"result"		: "match ([] ([] 1 2 3))"
+				"(match ([] a))"	: "a",
+				"result"			: "(match ([] ([] 1 2 3)))"
 			}, [1, 2, 3], "match embedded list in a list");
 						
 			checkResult({
@@ -237,42 +219,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}, 10, "macro execution");
 			
 			checkResult({
-				"match ([] ([] a))"	: "a",
-				"result"			: "match ([] ([] 1 2 3))"
+				"(match ([] ([] a)))"	: "a",
+				"result"				: "(match ([] ([] 1 2 3)))"
 			}, undefined, "rejects mismatched args in embedded list");
 
 			checkResult({
-				"match ([] 1 _ _)"	: "12",
-				"result"			: "match ([] 1 'cat' 'dog')"
+				"(match ([] 1 _ _))"	: "12",
+				"result"				: "(match ([] 1 'cat' 'dog'))"
 			}, 12, "match multiple wildcards");
 
 			checkResult({
-				"result": "[] ([] 1) ([] 2)"
+				"result": "([] ([] 1) ([] 2))"
 			}, [[1], [2]], "encases unencapsulated array of arrays");
 
 			checkResult({
-				"factorial 1"	: "1",
-				"factorial n"	: "* n (factorial (- n 1))",
-				"result"		: "factorial 4"
+				"(factorial 1)"	: "1",
+				"(factorial n)"	: "(* n (factorial (- n 1)))",
+				"result"		: "(factorial 4)"
 			}, 24, "simple pattern matched factorial");
 			
 			checkResult({
-				"whatIs (_.isNumber x)"		: "+ x ' is a number'",
-				"whatIs (_.isString x)"		: "+ x ' is a string'",
-				"result"					: "[] (whatIs 2) (whatIs 'hello')"
+				"(whatIs (_.isNumber x))"		: "(+ x ' is a number')",
+				"(whatIs (_.isString x))"		: "(+ x ' is a string')",
+				"result"						: "([] (whatIs 2) (whatIs 'hello'))"
 			}, ['2 is a number', 'hello is a string']);
 
 			checkResult({
-				"factorial 1"			: "1",
-				"factorial (< x 1)"		: "undefined",
-				"factorial n"			: "* n (factorial (- n 1))",
-				"result"				: "[] (factorial 0) (factorial 3)"
+				"(factorial 1)"				: "1",
+				"(factorial (< x 1))"		: "undefined",
+				"(factorial n)"				: "(* n (factorial (- n 1)))",
+				"result"					: "([] (factorial 0) (factorial 3))"
 			}, [undefined, 6], "factorial with negative range guard");
 
 			checkResult({
-				"quotient _ (=== _ 0)"	: "'undefined'",
-				"quotient x y"			: "/ x y",
-				"result"				: "[] (quotient 2 0) (quotient 8 2)"
+				"(quotient _ (=== _ 0))"	: "'undefined'",
+				"(quotient x y)"			: "(/ x y)",
+				"result"					: "([] (quotient 2 0) (quotient 8 2))"
 			}, ['undefined', 4], "guard range in second, anonymous parameter");
 			
 			checkResult({
@@ -286,7 +268,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}, 1, "extraenous arguments to a thunk ignored");
 
 			checkResult({
-				"result": ". ([] 1 2 3) 1"
+				"result": "(. ([] 1 2 3) 1)"
 			}, 2, "indexing array");
 
 			checkResult({

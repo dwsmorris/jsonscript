@@ -13,36 +13,6 @@
 			// split into key-value pairs
 			var pairs = R.toPairs(cs);
 
-			var encaseRootInBraces = function (astString) {
-				// remove spaces from strings to check if we need to encase in brackets
-				var astWithoutStrings = astString.replace(/"[^"]*"/g, '').replace(/'[^']*'/g, '');
-
-				var isUnencapsulatedAst = R.reduce(function (acc, character, index) {
-					if (character === "(") {
-						return R.merge({
-							astLevel: acc.astLevel + 1
-						}, acc);
-					} else if (character === ")") {
-						return R.merge({
-							astLevel: acc.astLevel - 1,
-							isUnencapsulatedAst: ((acc.astLevel === 1) && (index !== astWithoutStrings.length - 1)) ? true : undefined
-						}, acc);
-					} else {
-						return acc;
-					}
-				}, {
-					astLevel: 0
-				}, astWithoutStrings.split("")).isUnencapsulatedAst;
-
-				// if multiple components (ie. contains spaces) and not bounded by braces or quotes, add braces
-				if (isUnencapsulatedAst ||
-					((astWithoutStrings.indexOf(" ") !== -1) && ((astWithoutStrings[0] !== "(") || (astWithoutStrings.slice(-1) !== ")")))) {
-					return "(" + astString + ")";
-				} else {
-					return astString;
-				}
-			};
-
 			var extractComponents = function (term) {
 				if (_.isArray(term.expression)) {
 					return R.map(extractComponents, term.expression);
@@ -65,9 +35,9 @@
 
 			// split each line into name and expression
 			var equations = R.reduce(function (acc, sides) {
-				var lhLisp = encaseRootInBraces(sides[0].trim());
+				var lhLisp = sides[0].trim();
 				var signatureComponents = getSignatureComponents(lhLisp);
-				var rhLisp = encaseRootInBraces(sides[1].trim());
+				var rhLisp = sides[1].trim();
 				var name = signatureComponents.name;
 				var parameters = signatureComponents.parameters;
 				var localDefinitions = (acc.length === 0) ? [name] : R.uniq(R.concat(R.last(acc).localDefinitions, [name]));
