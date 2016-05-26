@@ -1,7 +1,10 @@
-﻿<link rel="import" href="pattern-script.html">
+﻿<link rel="import" href="../../lodash-import/lodash-import.html" />
+<link rel="import" href="pattern-script.html">
 
 <script>
 	PatternScript.compile = function (object) {
-
+		_.every(object, function (value, key) {
+			console.log(key);
+		});
 	};
 </script>
