@@ -1,10 +1,41 @@
 ﻿<link rel="import" href="../../lodash-import/lodash-import.html" />
 <link rel="import" href="pattern-script.html">
+<link rel="import" href="reduce.html" />
+<link rel="import" href="eval-ps.html" />
 
 <script>
 	PatternScript.compile = function (object) {
-		_.every(object, function (value, key) {
-			console.log(key);
+		var excludedKeys = [
+			"is",
+			"properties",
+			"ready",
+			"_factoryArgs",
+			"_scopeStyle",
+			"__hasRegisterFinished",
+			"_template",
+			"_styles",
+			"_notes",
+			"_notifyChange",
+			"_propertySetter",
+			"__setProperty",
+			"_effectEffects",
+			"_clearPath",
+			"_aggregatedAttributes",
+			"_propertyInfo",
+			"_useContent",
+			"setAttribute",
+			"removeAttribute"
+		];
+
+		var keys = R.reject(function(key) {
+			return R.contains(key, excludedKeys) || !_.isString(object[key]);
+		}, R.keys(object));
+
+		var customProperties = R.pick(keys, object);
+		var astProperties = PatternScript.evalPs(customProperties);
+
+		_.every(astProperties, function (value, key) {
+			object[key] = PatternScript.reduce(value);
 		});
 	};
 </script>
