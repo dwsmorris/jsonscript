@@ -34,7 +34,7 @@
 		var customProperties = R.pick(keys, object);
 		var astProperties = PatternScript.evalPs(customProperties);
 
-		_.every(astProperties, function (value, key) {
+		_.each(astProperties, function (value, key) {
 			object[key] = PatternScript.reduce(value);
 		});
 	};
