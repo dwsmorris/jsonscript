@@ -4,7 +4,8 @@
 <link rel="import" href="eval-ps.html" />
 
 <script>
-	PatternScript.compile = function (object) {
+	PatternScript.compile = function (component) {
+		var object = Object.getPrototypeOf(component);
 		var excludedKeys = [
 			"is",
 			"properties",
