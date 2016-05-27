@@ -38,7 +38,8 @@
 				var lhLisp = sides[0].trim();
 				var signatureComponents = getSignatureComponents(lhLisp);
 				var rhLisp = sides[1].trim();
-				var name = signatureComponents.name;
+				var macro = signatureComponents.name[0] === "*";
+				var name = macro ? signatureComponents.name.slice(1) : signatureComponents.name;
 				var parameters = signatureComponents.parameters;
 				var localDefinitions = (acc.length === 0) ? [name] : R.uniq(R.concat(R.last(acc).localDefinitions, [name]));
 				var passedParameters = R.reject(function (parameter) {
@@ -55,7 +56,8 @@
 					preWhitespace: sides[0].split(/[\w\(]/g)[0],
 					localDefinitions: localDefinitions,
 					passedParameters: passedParameters,
-					thunk: (lhLisp[0] === "(") && (passedParameters.length === 0)
+					thunk: (lhLisp[0] === "(") && (passedParameters.length === 0),
+					macro: macro
 				}]);
 			}, [], pairs);
 
@@ -71,7 +73,7 @@
 			}, [], equations);
 
 			var definitions = R.uniq(R.map(function (equation) {
-				return (equation.name[0] === "*") ? equation.name.slice(1) : equation.name;
+				return equation.name;
 			}, equations));
 
 			var patternMatchIndices = R.zipObj(patternMatchers, R.repeat(0, patternMatchers.length));
@@ -149,8 +151,7 @@
 				R.map(function (equation) {
 					var parameters = equation.parameters;
 					var hasNamedParameters = parameters.length > 0;
-					var isMacro = equation.name[0] === "*";
-					var name = isMacro ? equation.name.slice(1) : equation.name;
+					var name = equation.name;
 					var expression = equation.expression;
 					var isPatternMatched = equation.patternMatchIndex !== undefined;
 					var isCurried = parameters.length > 1;
@@ -169,7 +170,7 @@
 					}
 
 					if (isAst) {
-						var macroCode = isMacro ? " temp.macro = true;" : "";
+						var macroCode = equation.macro ? " temp.macro = true;" : "";
 						jsExpression = "(function() {var temp = " + jsExpression + "; temp.ast = true;" + macroCode + " return temp;})()";
 					}
 
