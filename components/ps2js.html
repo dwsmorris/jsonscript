@@ -71,7 +71,7 @@
 			}, [], equations);
 
 			var definitions = R.uniq(R.map(function (equation) {
-				return equation.name;
+				return (equation.name[0] === "*") ? equation.name.slice(1) : equation.name;
 			}, equations));
 
 			var patternMatchIndices = R.zipObj(patternMatchers, R.repeat(0, patternMatchers.length));
@@ -149,7 +149,8 @@
 				R.map(function (equation) {
 					var parameters = equation.parameters;
 					var hasNamedParameters = parameters.length > 0;
-					var name = equation.name;
+					var isMacro = equation.name[0] === "*";
+					var name = isMacro ? equation.name.slice(1) : equation.name;
 					var expression = equation.expression;
 					var isPatternMatched = equation.patternMatchIndex !== undefined;
 					var isCurried = parameters.length > 1;
@@ -168,7 +169,8 @@
 					}
 
 					if (isAst) {
-						jsExpression = "(function() {var temp = " + jsExpression + "; temp.ast = true; return temp;})()";
+						var macroCode = isMacro ? " temp.macro = true;" : "";
+						jsExpression = "(function() {var temp = " + jsExpression + "; temp.ast = true;" + macroCode + " return temp;})()";
 					}
 
 					var output = equation.patternMatchIndex ? "" : "var "; // not 0 or undefined

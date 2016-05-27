@@ -6,6 +6,7 @@
 <link rel="import" href="plus.html" />
 <link rel="import" href="dot.html" />
 <link rel="import" href="object.html" />
+<link rel="import" href="tilde.html" />
 
 <script>
 		PatternScript.word2js = function (word) {
@@ -29,6 +30,7 @@
 					case "[]"	: return "PatternScript.array";
 					case "{}"	: return "PatternScript.object";
 					case "."	: return "PatternScript.dot";
+					case "~"	: return "PatternScript.tilde";
 
 					default: return word;
 				}

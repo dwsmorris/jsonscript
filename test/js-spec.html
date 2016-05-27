@@ -302,6 +302,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"object"	: "({} 'twice' twice)",
 				"result"	: "((. object 'twice') 3)"
 			}, 6, "parameterized method activation");
+			
+			checkResult({
+				"(or x y)"		: "(if x true (if y true false))",
+				"result"		: "(or true (/ 1 0))"
+			}, true, "consuming a macro doesn't require macro definition");
+			
+			checkResult({
+				"(ignoreFirst a b)"			: "b",
+				"result"					: "(ignoreFirst (/ 1 0) true)"
+			}, true, "lazy evaluation");
 		});
 	</script>
 </body>
