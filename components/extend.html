@@ -1,0 +1,14 @@
+﻿<link rel="import" href="../../lodash-import/lodash-import.html" />
+<link rel="import" href="pattern-script.html">
+<link rel="import" href="reduce.html" />
+<link rel="import" href="eval-ps.html" />
+
+<script>
+	PatternScript.extend = function (component, json) {
+		var astProperties = PatternScript.evalPs(json);
+
+		_.each(astProperties, function (value, key) {
+			component[key] = PatternScript.reduce(value);
+		});
+	};
+</script>
