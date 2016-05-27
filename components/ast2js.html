@@ -13,7 +13,7 @@
 				}, [], ast).join(", ") + "]";
 			} else {
 				var jsWord = PatternScript.word2js(ast);
-				var noFurtherCurrying = PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1) || (ast === "[]") || (jsWord.indexOf("R.") === 0); // function parameters will already be curried
+				var noFurtherCurrying = PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1) || (ast === "[]") || (jsWord.indexOf("R.") === 0) || (jsWord.indexOf("this.") === 0); // function parameters will already be curried
 
 				var js = (noFurtherCurrying ? "" : "R.curry(") +
 					jsWord +
