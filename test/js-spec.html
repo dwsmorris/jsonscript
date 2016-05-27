@@ -48,6 +48,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			*/
 			
 			checkResult({
+				"result": "(if true 10 (throw))"
+			}, 10, "macro execution");
+
+			checkResult({
 				"result": "2"
 			}, 2, "number");
 			
@@ -219,10 +223,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}, [1, 2, 3], "match embedded list in a list");
 						
 			checkResult({
-				"result": "(if true 10 (/ 1 0))"
-			}, 10, "macro execution");
-			
-			checkResult({
 				"(match ([] ([] a)))"	: "a",
 				"result"				: "(match ([] ([] 1 2 3)))"
 			}, undefined, "rejects mismatched args in embedded list");
@@ -270,7 +270,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"(thunk)": "1",
 				"result": "(thunk 2 3)"
 			}, 1, "extraenous arguments to a thunk ignored");
-
+			
 			checkResult({
 				"result": "([])"
 			}, [], "empty array");
@@ -312,6 +312,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"(ignoreFirst a b)"			: "b",
 				"result"					: "(ignoreFirst (/ 1 0) true)"
 			}, true, "lazy evaluation");
+
+			checkResult({
+				"result": "(/ 1 0)"
+			}, Infinity, "division by zero");
 		});
 	</script>
 </body>

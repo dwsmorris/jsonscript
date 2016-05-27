@@ -7,6 +7,7 @@
 <link rel="import" href="dot.html" />
 <link rel="import" href="object.html" />
 <link rel="import" href="tilde.html" />
+<link rel="import" href="throw.html" />
 
 <script>
 		PatternScript.word2js = function (word) {
@@ -15,6 +16,7 @@
 			} else {
 				switch (word) {
 					case "if":
+					case "throw":
 						return "PatternScript." + word;
 
 					case "+"	: return "PatternScript.plus";
