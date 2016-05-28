@@ -270,6 +270,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"(thunk)": "1",
 				"result": "(thunk 2 3)"
 			}, 1, "extraenous arguments to a thunk ignored");
+
+			checkResult({
+				"(thunk)"		: "(Math.sqrt 9)",
+				"result"		: "(thunk)"
+			}, 3, "thunk containing native javascript function");
+
+			checkResult({
+				"(thunk)"		: "(+ 2)",
+				"result"		: "((thunk) 3)"
+			}, 5, "thunk containing internal javascript function");
 			
 			checkResult({
 				"result": "([])"
