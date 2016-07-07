@@ -3,6 +3,10 @@
 
 <script>
 	PatternScript.dot = function (object, member) {
-		return PatternScript.reduce(object)[member];
+		var reducedObject = PatternScript.reduce(object, this);
+		var member = reducedObject[member];
+
+		if (_.isFunction(member)) return _.bind(member, reducedObject);
+		else return member;
 	};
 </script>

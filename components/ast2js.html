@@ -6,24 +6,26 @@
 <link rel="import" href="word2js.html">
 
 <script>
-		PatternScript.ast2js = function (ast, parameters) {
-			if (_.isArray(ast)) {
-				return "[" + R.reduce(function (acc, term) {
-					return R.concat(acc, PatternScript.ast2js(term, parameters));
-				}, [], ast).join(", ") + "]";
+	PatternScript.ast2js = function (ast, parameters) {
+		if (_.isArray(ast)) {
+			return "[" + R.reduce(function (acc, term) {
+				return R.concat(acc, PatternScript.ast2js(term, parameters));
+			}, [], ast).join(", ") + "]";
+		} else {
+			var jsWord = PatternScript.word2js(ast);
+			var noFurtherCurrying = true;//PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1) || (ast === "[]") || (jsWord.indexOf("R.") === 0) || (jsWord.indexOf("this.") === 0); // function parameters will already be curried
+
+			if (R.contains(ast, parameters)) jsWord = "this." + jsWord;
+
+			var js = (noFurtherCurrying ? "" : "R.curry(") +
+				jsWord +
+				(noFurtherCurrying ? "" : ")");
+
+			if (PatternScript.isMacro(ast)) {
+				return "(function() {var temp = " + js + "; temp.macro = true; return temp;})()";
 			} else {
-				var jsWord = PatternScript.word2js(ast);
-				var noFurtherCurrying = PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1) || (ast === "[]") || (jsWord.indexOf("R.") === 0) || (jsWord.indexOf("this.") === 0); // function parameters will already be curried
-
-				var js = (noFurtherCurrying ? "" : "R.curry(") +
-					jsWord +
-					(noFurtherCurrying ? "" : ")");
-
-				if (PatternScript.isMacro(ast)) {
-					return "(function() {var temp = " + js + "; temp.macro = true; return temp;})()";
-				} else {
-					return js;
-				}
+				return js;
 			}
-		};
+		}
+	};
 </script>

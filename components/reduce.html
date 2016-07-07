@@ -9,7 +9,7 @@
 			var fn = PatternScript.reduce(ast[0], component);
 			var rest = R.tail(ast);
 
-			var args = (fn && fn.macro) ? rest : R.map(PatternScript.reduce, rest);
+			var args = (fn && fn.macro) ? rest : R.map(_.partial(PatternScript.reduce, _, component), rest);
 
 			if (!_.isFunction(fn)) {
 				return R.concat([fn], args);
