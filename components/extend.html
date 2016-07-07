@@ -10,7 +10,7 @@
 		_.each(astProperties, function (value, key) {
 			if (_.isFunction(value)) {
 				component[key] = function () {
-					return PatternScript.reduce(value.apply(component, Array.prototype.slice.call(arguments)), this);
+					return PatternScript.reduce(value.apply(this, Array.prototype.slice.call(arguments)), this);
 				};
 			} else {
 				component[key] = PatternScript.reduce(value);
