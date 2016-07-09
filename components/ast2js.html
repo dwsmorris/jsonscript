@@ -15,7 +15,9 @@
 			var jsWord = PatternScript.word2js(ast);
 			var noFurtherCurrying = true;//PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1) || (ast === "[]") || (jsWord.indexOf("R.") === 0) || (jsWord.indexOf("this.") === 0); // function parameters will already be curried
 
-			if (R.contains(ast, parameters)) jsWord = "this." + jsWord;
+			// allowing the following line should support dependency injection.
+			// but if fails when the members are not functions as 'this' is then evaluated immediatelly on construction of the returned object...
+			//if (R.contains(ast, parameters)) jsWord = "this." + jsWord;
 
 			var js = (noFurtherCurrying ? "" : "R.curry(") +
 				jsWord +
