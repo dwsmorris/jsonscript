@@ -1,7 +1,8 @@
-﻿<link rel="import" href="pattern-script.html">
+﻿<link rel="import" href="../../ramda-import/ramda-import.html">
+<link rel="import" href="pattern-script.html">
 
 <script>
-	PatternScript.plus = function (a, b) {
+	PatternScript.plus = R.curry(function (a, b) {
 		return a + b;
-	};
+	});
 </script>

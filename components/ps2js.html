@@ -154,7 +154,7 @@
 					var name = equation.name;
 					var expression = equation.expression;
 					var isPatternMatched = equation.patternMatchIndex !== undefined;
-					var isCurried = false;//parameters.length > 1;
+					var isCurried = parameters.length > 1;
 					var passedParameters = equation.passedParameters;
 					var localDefinitions = equation.localDefinitions;
 					var defined = R.concat(R.concat(passedParameters, localDefinitions), htmlSymbols);
