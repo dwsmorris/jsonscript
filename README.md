@@ -27,5 +27,5 @@ PatternScript ...
 ```
 * ... has access to any third-party libraries defined in your environment
 ```
-{   '(sumTree tree)': '(_.sum (_.flattenDeep tree))'  }
+{   'sumTree'       : '(_.compose _.sum _.flattenDeep)'  }
 ```
