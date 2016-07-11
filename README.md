@@ -1,7 +1,5 @@
 # PatternScript
 
-PatternScript is an interpreted, embedded lisp for functional programming in JavaScript.
-
 PatternScript ...
 
 * ... is encoded in JSON string dictionaries
