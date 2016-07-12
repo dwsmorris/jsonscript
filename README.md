@@ -49,7 +49,7 @@
 ```
 ... allows predicate guard functions in pattern match signatures
 ```
-{   '(factorial (_.isNumber _))'    : '(throw "factorial requires a number")',
+{   '(factorial (! (_.isNumber _)))': '(throw "factorial requires a number")',
     '(factorial (!== (% _ 1) 0))'   : '(throw "factorial requires an integer")',
     '(factorial (< _ 1))'           : '(throw "factorial requires a positive integer")',
     '(factorial 1)'                 : '1',
