@@ -30,7 +30,7 @@
 {   'integerArray'                  : '([] 1 2 (+ 1 2) 4)',
     'object'                        : '({} "four" 4 "tree" ([] "leaf" ([] "leaf" "leaf")))' }
 ```
-... automatically curries JavaScript operators and user-defined functions
+... automatically curries JavaScript operators and all PatternScript functions
 ```
 {   'add2'                          : '(+ 2)',
     'five'                          : '(add2 3)',
