@@ -27,7 +27,7 @@
 ```
 ... supports array and object literals
 ```
-{   'integers'                      : '([] 1 2 (+ 1 2) 4)',
+{   'integerArray'                  : '([] 1 2 (+ 1 2) 4)',
     'object'                        : '({} "four" 4 "tree" ([] "leaf" ([] "leaf" "leaf")))' }
 ```
 ... automatically curries JavaScript operators and user-defined functions
