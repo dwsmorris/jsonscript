@@ -315,12 +315,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			}, 6, "parameterized method activation");
 			
 			checkResult({
-				"(*or x y)"		: "(if x true (if y true false))",
+				"(or x y)"		: "(if x true (if y true false))",
 				"result"		: "(or true (throw))"
 			}, true, "macro definition calling another macro");
 			
 			checkResult({
-				"(*ignoreFirst a b)"		: "b",
+				"(ignoreFirst a b)"		: "b",
 				"result"					: "(ignoreFirst (throw) true)"
 			}, true, "macro definition controlling evaluation order");
 

@@ -40,6 +40,7 @@
 				var rhLisp = sides[1].trim();
 				var macro = signatureComponents.name[0] === "*";
 				var name = macro ? signatureComponents.name.slice(1) : signatureComponents.name;
+				macro = true;
 				var parameters = signatureComponents.parameters;
 				var localDefinitions = (acc.length === 0) ? [name] : R.uniq(R.concat(R.last(acc).localDefinitions, [name]));
 				var passedParameters = R.reject(function (parameter) {
