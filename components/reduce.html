@@ -4,6 +4,26 @@
 
 <script>
 	PatternScript.reduce = function (ast, component) {
+		if (_.isFunction(ast) && ast.lazy) {
+			var terms = ast();
+
+			if (_.isArray(terms)) {
+				var fn = PatternScript.reduce(terms[0], component);
+				var args = R.tail(terms);
+
+				if (fn.lazy) { // term rewrite using ast
+					return PatternScript.reduce(fn.apply(component, args), component);
+				} else { // strict evaluation of JS function - reduce arguments first
+					return fn.apply(component, R.map(_.partial(PatternScript.reduce, _, component), args));
+				}
+			} else {
+				return terms;
+			}
+		} else {
+			return ast;
+		}
+
+		return;
 		if (_.isArray(ast)) {
 			// apply rest to first
 			var fn = PatternScript.reduce(ast[0], component);
