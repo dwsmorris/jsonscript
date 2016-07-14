@@ -67,28 +67,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			checkResult({
 				"result": "([] ([] 1 2 3))"
 			}, [[1,2,3]], "embedded array");
-			/*
+			
 			checkResult({
 				"result": "([] 2 (+ 1 2) 4)"
 			}, [2, 3, 4], "evaluation within root level bracketed array");
-
+			
 			checkResult({
 				"result": "'hello'"
 			}, "hello", "string literal");
-
+			
 			checkResult({
 				"result": "(+ 2 3)"
 			}, 5, "bracketted function application");
-
+			
 			checkResult({
 				"result": "(- 10 (* 2 3))"
 			}, 4, "compound expression");
-
+			
+			// TODO: use 'this.two' for 'two' for DI
 			checkResult({
 				"two"	: "2",
 				"result": "(+ two 1)"
 			}, 3, "local expression");
-
+			/*
 			checkResult({
 				"result": "((+ 2) 3)"
 			}, 5, "partial application");
