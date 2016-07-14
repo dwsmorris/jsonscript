@@ -8,9 +8,9 @@
 <script>
 	PatternScript.ast2js = function (ast, parameters) {
 		if (_.isArray(ast)) {
-			return "function() {return [" + R.reduce(function (acc, term) {
+			return "(function() {var temp = function(){ return [" + R.reduce(function (acc, term) {
 				return R.concat(acc, PatternScript.ast2js(term, parameters));
-			}, [], ast).join(", ") + "];}";
+			}, [], ast).join(", ") + "];}; temp.lazy = true; return temp;})()";
 		} else {
 			var jsWord = PatternScript.word2js(ast);
 			var noFurtherCurrying = true;//PatternScript.isLiteral(ast) || R.contains(ast, parameters) || (ast.indexOf("args[") !== -1) || (ast === "[]") || (jsWord.indexOf("R.") === 0) || (jsWord.indexOf("this.") === 0); // function parameters will already be curried

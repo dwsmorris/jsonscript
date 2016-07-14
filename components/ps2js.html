@@ -161,7 +161,6 @@
 					var defined = R.concat(R.concat(passedParameters, localDefinitions), htmlSymbols);
 					var jsExpression = PatternScript.ast2js(expression, defined);
 					var isAst = passedParameters.length > 0;
-					var isLazy = _.isArray(expression);
 
 					if (isAst || equation.thunk || isPatternMatched) {
 						jsExpression = "function(" + passedParameters.join(", ") + ") {return " + jsExpression + ";}";
@@ -228,13 +227,7 @@
 						}
 					}
 
-					output += jsExpression + ";";
-
-					if (isLazy) {
-						output += " " + name + ".lazy = true;";
-					}
-
-					output += "\n";
+					output += jsExpression + ";\n";
 
 					return output;
 				}, equations).join(" ") +
