@@ -2,7 +2,14 @@
 <link rel="import" href="pattern-script.html">
 
 <script>
-	PatternScript.plus = R.curry(function (a, b) {
-		return a + b;
-	});
+	PatternScript.plus = function () {
+		var args = Array.prototype.slice.call(arguments);
+		if (args.length > 1 && _.isNumber(args[0])) {
+			return R.curry(function (a, b) {
+				return a + b;
+			}).apply(null, arguments);
+		} else { // string
+			return arguments.join("");
+		}
+	};
 </script>
