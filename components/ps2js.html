@@ -123,26 +123,10 @@
 				}, [], terms));
 			}, [], equations)));
 
-			var htmlSymbols = [];/*R.reduce(function (acc, bundleSymbols) {
-				return acc.concat(R.reduce(function (acc, symbol) {
-					if (symbol.indexOf("rvc!") === 0) {
-						return acc.concat([symbol.slice(4)]);
-					} else {
-						return acc;
-					}
-				}, [], bundleSymbols));
-			}, [], requirejs.s.contexts._.config.bundles).concat(R.map(R.head, R.filter(function (pair) {
-				return pair[1].indexOf("html") !== -1;
-			}, _.pairs(requirejs.s.contexts._.config.paths))));*/
-
 			var requireBlock = R.map(function (symbol) {
-				var isHtml = R.contains(symbol, htmlSymbols);
-
 				return "require('" +
-					(isHtml ? "rvc!" : "") +
 					symbol +
-					"')" +
-					(isHtml ? "()" : "");
+					"')";
 			}, dependencies).join(", ");
 
 			var script = /*"(function(R, matches, _, cs_reduce" +
@@ -158,8 +142,7 @@
 					var isCurried = parameters.length > 1;
 					var passedParameters = equation.passedParameters;
 					var localDefinitions = equation.localDefinitions;
-					var defined = R.concat(R.concat(passedParameters, localDefinitions), htmlSymbols);
-					var jsExpression = PatternScript.ast2js(expression, defined);
+					var jsExpression = PatternScript.ast2js(expression, passedParameters, localDefinitions);
 					var isAst = passedParameters.length > 0;
 
 					if (isAst || equation.thunk || isPatternMatched) {
@@ -170,10 +153,11 @@
 						jsExpression = "R.curry(" + jsExpression + ")";
 					}
 
-					if (isAst) {
-						var macroCode = equation.macro ? " temp.macro = true;" : "";
-						jsExpression = "(function() {var temp = " + jsExpression + "; temp.ast = true;" + macroCode + " return temp;})()";
-					}
+					// TODO: maybe we need something here...
+					//if (isAst) {
+					//	var macroCode = equation.macro ? " temp.macro = true;" : "";
+					//	jsExpression = "(function() {var temp = " + jsExpression + "; temp.ast = true;" + macroCode + " return temp;})()";
+					//}
 
 					//var output = equation.patternMatchIndex ? "" : "var "; // not 0 or undefined
 					//output += name + " = ";
@@ -199,7 +183,7 @@
 								}
 							};
 
-							jsExpression = "function(args) {return R.all(R.identity, PatternScript.reduce(" + PatternScript.ast2js(parameters.map(processParameters), defined) + ")) ? args : false;}, " + jsExpression;
+							jsExpression = "function(args) {return R.all(R.identity, PatternScript.reduce(" + PatternScript.ast2js(parameters.map(processParameters), passedParameters, localDefinitions) + ")) ? args : false;}, " + jsExpression;
 						} else {
 							var getPatternString = function (pattern) {
 								if (_.isArray(pattern)) {
