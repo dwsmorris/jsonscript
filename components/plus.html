@@ -4,10 +4,16 @@
 <script>
 	PatternScript.plus = function () {
 		var args = Array.prototype.slice.call(arguments);
-		if (args.length > 1 && _.isNumber(args[0])) {
-			return R.curry(function (a, b) {
+		if (args.length > 0 && _.isNumber(args[0])) {
+			var result = R.curry(function (a, b) {
 				return a + b;
 			}).apply(null, arguments);
+
+			if (_.isFunction(result)) {
+				//result.lazy = true;
+			}
+
+			return result;
 		} else { // string
 			return arguments.join("");
 		}
