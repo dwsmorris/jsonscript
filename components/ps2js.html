@@ -148,7 +148,7 @@
 			var script = /*"(function(R, matches, _, cs_reduce" +
 				(requireBlock ? ", " : "") +
 				dependencies.join(", ") +
-				") {\n"*/ "var result = {};\nresult = {\n" +
+				") {\n"*/ "return {\n" +
 				R.map(function (equation, index) {
 					var parameters = equation.parameters;
 					var hasNamedParameters = parameters.length > 0;
@@ -234,7 +234,7 @@
 
 					return output;
 				}, equations).join(" ") +
-				"};\nreturn result;";/*{" +
+				"};";/*{" +
 				R.map(function (definition) {
 					return definition + ": " + definition;
 				}, definitions).join(", ") +
