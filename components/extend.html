@@ -8,12 +8,12 @@
 		var astProperties = PatternScript.evalPs(json);
 
 		_.each(astProperties, function (value, key) {
-			if (_.isFunction(value)) {
+			if (_.isFunction(value) && !value.lazy) {
 				component[key] = function () {
 					return PatternScript.reduce(value.apply(this, Array.prototype.slice.call(arguments)), this);
 				};
 			} else {
-				component[key] = PatternScript.reduce(value);
+				component[key] = PatternScript.reduce(value, component);
 			}
 		});
 	};

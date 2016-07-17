@@ -18,21 +18,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	<!-- Step 1: import the element to test -->
 	<link rel="import" href="../bower_components/ramda-import/ramda-import.html">
 	<link rel="import" href="../bower_components/lodash-import/lodash-import.html">
-	<link rel="import" href="../components/eval-ps.html">
-	<link rel="import" href="../components/reduce.html">
+	<link rel="import" href="../components/extend.html">
 </head>
 <body>
 	<script>
 		window.addEventListener('WebComponentsReady', function () {
 			var checkResult = function (script, expectedResult, message) {
 				it(JSON.stringify(script) + " => result = " + JSON.stringify(expectedResult) + " // " + message, function () {
-					//var rewritten = rewrite(evalCs(script).result);
-					var result = PatternScript.reduce(/*rewrite(*/PatternScript.evalPs(script).result/*)*/);
+					var object = {};
+					PatternScript.extend(object, script);
 
-					expect(result).to.deep.equal(expectedResult);
+					expect(object.result).to.deep.equal(expectedResult);
 				});
 			};
-
+			+
 			/*
 			checkResult({
 				"match a a"	: "'matched'",
@@ -84,7 +83,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				"result": "(- 10 (* 2 3))"
 			}, 4, "compound expression");
 			
-			// TODO: use 'this.two' for 'two' for DI
 			checkResult({
 				"two"	: "2",
 				"result": "(+ two 1)"

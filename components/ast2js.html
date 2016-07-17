@@ -8,7 +8,7 @@
 <script>
 	PatternScript.ast2js = function (ast, parameters) {
 		if (_.isArray(ast)) {
-			return "(function() {var temp = function(){ return [" + R.reduce(function (acc, term) {
+			return "(function() {var temp = function(self){ return [" + R.reduce(function (acc, term) {
 				return R.concat(acc, PatternScript.ast2js(term, parameters));
 			}, [], ast).join(", ") + "];}; temp.lazy = true; return temp;})()";
 		} else {
@@ -18,6 +18,8 @@
 			// allowing the following line should support dependency injection.
 			// but if fails when the members are not functions as 'this' is then evaluated immediatelly on construction of the returned object...
 			//if (R.contains(ast, parameters)) jsWord = "this." + jsWord;
+
+			if (R.contains(ast, parameters)) jsWord = "self." + jsWord;
 
 			var js = (noFurtherCurrying ? "" : "R.curry(") +
 				jsWord +

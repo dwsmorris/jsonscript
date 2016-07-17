@@ -148,8 +148,8 @@
 			var script = /*"(function(R, matches, _, cs_reduce" +
 				(requireBlock ? ", " : "") +
 				dependencies.join(", ") +
-				") {\n"*/ "" +
-				R.map(function (equation) {
+				") {\n"*/ "var result = {};\nresult = {\n" +
+				R.map(function (equation, index) {
 					var parameters = equation.parameters;
 					var hasNamedParameters = parameters.length > 0;
 					var name = equation.name;
@@ -175,8 +175,9 @@
 						jsExpression = "(function() {var temp = " + jsExpression + "; temp.ast = true;" + macroCode + " return temp;})()";
 					}
 
-					var output = equation.patternMatchIndex ? "" : "var "; // not 0 or undefined
-					output += name + " = ";
+					//var output = equation.patternMatchIndex ? "" : "var "; // not 0 or undefined
+					//output += name + " = ";
+					var output = "\t" + name + ": ";
 					if (isPatternMatched) {
 						// guarded if parameters contains function (internal patternscript, externally namespaced function, or local definition)
 						var isFunction = function (term) {
@@ -227,17 +228,17 @@
 						}
 					}
 
-					output += jsExpression + ";\n";
+					if (index != equations.length - 1) jsExpression += ",";
+
+					output += jsExpression + "\n";
 
 					return output;
 				}, equations).join(" ") +
-				"return {" +
+				"};\nreturn result;";/*{" +
 				R.map(function (definition) {
 					return definition + ": " + definition;
 				}, definitions).join(", ") +
-				"};"/*})(require('ramda'), require('matches'), require('_'), require('cs_reduce')" +
-				(requireBlock ? ", " : "") +
-				requireBlock + ");"*/;
+				"};";*/
 
 			console.log(script);
 			return script;

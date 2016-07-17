@@ -5,7 +5,7 @@
 <script>
 	PatternScript.reduce = function (ast, component) {
 		if (_.isFunction(ast) && ast.lazy) {
-			var terms = ast();
+			var terms = ast(component);
 
 			if (_.isArray(terms)) {
 				var fn = PatternScript.reduce(terms[0], component);
