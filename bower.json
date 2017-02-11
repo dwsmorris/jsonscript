@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "ramda-import": "dwsmorris/ramda-import",
-    "webcomponentsjs": "polymer/webcomponentsjs#^0.7.22",
+    "webcomponentsjs": "polymer/webcomponentsjs#^0.7.24",
     "lodash-import": "dwsmorris/lodash-import",
     "matches.js": "dwsmorris/matches.js#master"
   },
