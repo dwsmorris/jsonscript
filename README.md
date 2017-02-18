@@ -1,4 +1,4 @@
-# PatternScript
+# JsonScript
 
 ... is encoded in JSON string dictionaries
 ```
